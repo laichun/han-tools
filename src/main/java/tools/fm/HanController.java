@@ -21,7 +21,7 @@ import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.*;
 
 @Slf4j
-public abstract class HanController <T extends BaseEntity> {
+public abstract class HanController <T extends HBaseEntity> {
 
     public static final String PAGE_SIZE = "pageSize";
     public static final String PAGE = "page";
@@ -29,7 +29,7 @@ public abstract class HanController <T extends BaseEntity> {
 
     @ApiOperation("查询所有数据接口,传入dto")
     @PostMapping("/findall")
-    public <E extends BaseDTO> ResponseEntity findAll(@RequestBody E dto) {
+    public <E extends HBaseDTO> ResponseEntity findAll(@RequestBody E dto) {
         //准备查询条件
         QueryWrapper<T> queryWrapper = new QueryWrapper<T>();
         List<QueryDto> queryDtoList = dto.getQueryDtoList();
@@ -51,8 +51,8 @@ public abstract class HanController <T extends BaseEntity> {
     }
     @ApiOperation(value = "分页查询", notes = "分页查询")
     @PostMapping("/listpage")
-    public <E extends BaseDTO> ResponseEntity listPage( @RequestParam(PAGE_SIZE) long pageSize,
-                                    @RequestParam(PAGE) long pg, @RequestBody E dto) {
+    public <E extends HBaseDTO> ResponseEntity listPage(@RequestParam(PAGE_SIZE) long pageSize,
+                                                        @RequestParam(PAGE) long pg, @RequestBody E dto) {
         //设置分页条件
         Page page = new Page(pageSize, pg);
         //准备查询条件
@@ -97,12 +97,15 @@ public abstract class HanController <T extends BaseEntity> {
     @ApiOperation("-更新固件字段")
     @PostMapping("/updateByKeys")
     public <E extends ByUpdateKey> ResponseEntity updateByKeys(@RequestBody E param) {
-        Assert.notNull(param.getDtos(), "更新字段不能为空");
+        Assert.notNull(param.getSetDtos(), "更新字段不能为空");
         UpdateWrapper<ByUpdateKey> updateWrapper = new UpdateWrapper<ByUpdateKey>();
         updateWrapper.eq("id", param.getId());
-       // updateWrapper.eq("product_id", param.getProductId());
-        for (UpdateDto item : param.getDtos()) {
-            updateWrapper.set(StrTool.xX2x_x(item.getKey()), item.getValue());
+        for(UpdateDto eqItem : param.getEqDtos()){
+            updateWrapper.eq(StrTool.xX2x_x(eqItem.getKey()), eqItem.getValue());
+        }
+
+        for (UpdateDto setItem : param.getSetDtos()) {
+            updateWrapper.set(StrTool.xX2x_x(setItem.getKey()), setItem.getValue());
         }
         //更新
         return ResponseEntity.ok(getService().update(updateWrapper));

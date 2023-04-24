@@ -14,5 +14,10 @@ public class ByUpdateKey implements Serializable {
 
     @ApiModelProperty("ID id必传")
     private String id; // id必传
-    private List<UpdateDto> dtos;
+
+    @ApiModelProperty("等于的集合")
+    private List<UpdateDto> eqDtos;
+
+    @ApiModelProperty("设置值的集合")
+    private List<UpdateDto> setDtos;
 }

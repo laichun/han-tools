@@ -1,4 +1,4 @@
-package tools.fm.param;
+package com.han.tools.fm.param;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;

@@ -1,4 +1,4 @@
-package com.han.tools.fm.param;
+package com.githut.laich.tools.fm.param;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;

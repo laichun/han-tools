@@ -1,4 +1,4 @@
-package com.han.tools.fm.enums;
+package com.githut.laich.tools.fm.enums;
 
 /**
  * eq 就是 equal等于

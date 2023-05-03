@@ -1,4 +1,4 @@
-package com.githut.laich.tools.fm.param;
+package com.todostudy.tools.fm.param;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;

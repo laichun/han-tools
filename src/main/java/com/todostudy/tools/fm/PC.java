@@ -1,4 +1,4 @@
-package com.githut.laich.tools.fm;
+package com.todostudy.tools.fm;
 
 public interface PC {
 
@@ -17,4 +17,11 @@ public interface PC {
     String DATA_NULL="数据不存在";
     String REPEAT_ERROR="重复处理数据/数据已处理";
     String DATA_ERROR="参数错误";
+
+    String SUCCESS = "success";
+    int OK_CODE = 200;
+    int ERROR_CODE = -1;
+
+    String UTF8="utf-8";
+    String DATA_FORM_1="yyyy-MM-dd";
 }

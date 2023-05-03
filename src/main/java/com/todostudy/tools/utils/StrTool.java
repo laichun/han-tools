@@ -1,4 +1,4 @@
-package com.githut.laich.tools.utils;
+package com.todostudy.tools.utils;
 
 import java.util.UUID;
 import java.util.regex.Matcher;

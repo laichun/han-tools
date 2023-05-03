@@ -1,4 +1,4 @@
-package com.githut.laich.tools.fm;
+package com.todostudy.tools.fm;
 
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -7,10 +7,10 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.githut.laich.tools.fm.param.ByUpdateKey;
-import com.githut.laich.tools.fm.param.UpdateDto;
-import com.githut.laich.tools.utils.StrTool;
-import com.githut.laich.tools.fm.enums.QueryEnum;
+import com.todostudy.tools.fm.param.ByUpdateKey;
+import com.todostudy.tools.fm.param.UpdateDto;
+import com.todostudy.tools.utils.StrTool;
+import com.todostudy.tools.fm.enums.QueryEnum;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 
@@ -94,7 +94,7 @@ public abstract class HanController <T extends HBaseEntity> {
         }
     }
 
-    @ApiOperation("-更新固件字段")
+    @ApiOperation("-更新字段")
     @PostMapping("/updateByKeys")
     public <E extends ByUpdateKey> ResponseEntity updateByKeys(@RequestBody E param) {
         Assert.notNull(param.getSetDtos(), "更新字段不能为空");

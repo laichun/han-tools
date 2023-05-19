@@ -41,5 +41,11 @@ public class StrTool {
         return sb.toString();
     }
 
+    public static String replaceAll(String sourceStr,String reg,String replaceStr) {
+        Pattern pattern = Pattern.compile(reg);
+        Matcher matcher = pattern.matcher(sourceStr);
+        return matcher.replaceAll(replaceStr);
+    }
+
 
 }

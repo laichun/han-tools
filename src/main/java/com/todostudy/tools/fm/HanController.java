@@ -54,7 +54,7 @@ public abstract class HanController <T extends HBaseEntity> {
     public <E extends HBaseDTO> ResponseEntity listPage(@RequestParam(PAGE_SIZE) long pageSize,
                                                         @RequestParam(PAGE) long pg, @RequestBody E dto) {
         //设置分页条件
-        Page page = new Page(pageSize, pg);
+        Page page = new Page(pg, pageSize);
         //准备查询条件
         QueryWrapper<T> queryWrapper = new QueryWrapper<>();
 

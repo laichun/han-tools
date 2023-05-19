@@ -9,8 +9,10 @@ public interface PC {
     int t4=4;
     int t5=5;
 
-    String fix_ = "_";
-    String fix=":";
+    String f_ = "-";
+    String fix = "_";
+    String f1=":";
+    String MSM="_msm";
 
 
     String AUTH_ERROR="用户无权限操作";
@@ -24,4 +26,6 @@ public interface PC {
 
     String UTF8="utf-8";
     String DATA_FORM_1="yyyy-MM-dd";
+    String DATA_FORM_2="yyyyMMddHHmmss";
+    String GMT="GMT+8:00";
 }

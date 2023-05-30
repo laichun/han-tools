@@ -8,9 +8,12 @@ public interface PC {
     int t3=3;
     int t4=4;
     int t5=5;
+    int t245=256;
+    int t1024=1024;
 
     String f_ = "-";
     String fix = "_";
+    String f_url="&";
     String f1=":";
     String MSM="_msm";
 

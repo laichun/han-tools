@@ -1,10 +1,18 @@
 package com.todostudy.tools.service;
 
+import com.todostudy.tools.fm.PC;
 import com.todostudy.tools.utils.JacksonUtil;
 import com.todostudy.tools.web.req.WXENDto;
 import lombok.Builder;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
+
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 /**
  * @author hanson
@@ -20,6 +28,7 @@ import org.springframework.web.client.RestTemplate;
  *                 .build().sendMsg(dto);
  */
 @Builder
+@Slf4j
 public class SendWXEnterpriseService {
 
     private String api;
@@ -27,8 +36,10 @@ public class SendWXEnterpriseService {
     private static RestTemplate restTemplate =new RestTemplate();
 
     public String sendMsg(WXENDto json){
-        System.out.println(JacksonUtil.toString(json));
-        HttpEntity<String> httpEntity = new HttpEntity<String>(JacksonUtil.toString(json));
+        log.debug("==> data:{}",JacksonUtil.toString(json));
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.valueOf(MediaType.APPLICATION_JSON_VALUE));
+        HttpEntity<String> httpEntity = new HttpEntity<String>(JacksonUtil.toString(json),headers);
         String forObject = restTemplate.postForObject(api, httpEntity,String.class);
         return forObject;
     }

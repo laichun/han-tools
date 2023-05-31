@@ -39,6 +39,7 @@
         <spring-boot.version>2.5.9</spring-boot.version>
         <swagger.version>3.0.0</swagger.version>
         <java.version>11</java.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
     <scm>
@@ -109,6 +110,12 @@
             <artifactId>jackson-databind</artifactId>
             <version>2.12.6</version>
             <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>RELEASE</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 

@@ -60,9 +60,9 @@ public class StrTool {
 
     /**
      * @param url
-     * @param par
+     * @param par  參數
      * @param method
-     * @param headers
+     * @param headers header參數
      * @return String s1 = simpleHttp("http://xxx", null, HttpMethod.GET,headers);
      * @throws IOException
      * @throws InterruptedException
@@ -81,7 +81,6 @@ public class StrTool {
                     .uri(URI.create(url))
                     .header(HttpHeaders.CONTENT_TYPE,"application/x-www-form-urlencoded")
                     .POST(HttpRequest.BodyPublishers.ofString(str_json_url(Optional.ofNullable(par).orElse(new HashMap()))));
-
         }
 
         if(headers!=null && !CollectionUtils.isEmpty(headers)) {
@@ -120,10 +119,10 @@ public class StrTool {
     public static String str_json_url(Map<String, Object> hashMap){
         StringBuilder builder = new StringBuilder();
         for (Map.Entry<String, Object> entry : hashMap.entrySet()) {
-            if (builder.length() > 0) {
+            if (builder.length() > PC.t0) {
                 builder.append(PC.f_url);
             }
-            builder.append(entry.getKey()).append("=").append(entry.getValue());
+            builder.append(entry.getKey()).append(PC.f_eq).append(entry.getValue());
         }
         return builder.toString();
     }

@@ -53,14 +53,6 @@ public class DesService {
             (byte) 0xCD, (byte) 0xEF };
     private AlgorithmParameterSpec iv = null;// 加密算法的参数接口
 
-/*    public static void main(String[] args) {
-        System.out.println(UUID.randomUUID());
-        String enc = new DesService().getEnc("sdfsdf23423r2");
-        System.out.println(enc);
-        String dec = new DesService().getDec(enc);
-        System.out.println(dec);
-    }*/
-
     @PostConstruct
     public void init() {
         try {

@@ -6,6 +6,10 @@ import lombok.Data;
 import java.io.Serializable;
 import java.util.List;
 
+/**
+ * @author  hanson
+ * 微信api数据
+ */
 @Data
 public class WXENDto implements Serializable {
 

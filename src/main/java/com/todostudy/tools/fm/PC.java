@@ -17,6 +17,12 @@ public interface PC {
     String f_url = "&";
     String f1 = ":";
     String MSM = "_msm";
+    String REQ = "req";
+    String JSONB = "jsonb";
+    String JSON = "JSON";
+    String ORGAN_ID = "organizationId";
+    String ORG_ID = "orgId";
+    String TENANT_ID = "tenantId";
 
 
     String AUTH_ERROR = "用户无权限操作";
@@ -33,4 +39,7 @@ public interface PC {
     String DATA_FORM_1 = "yyyy-MM-dd";
     String DATA_FORM_2 = "yyyyMMddHHmmss";
     String GMT = "GMT+8:00";
+
+    String PAGE_SIZE = "pageSize";
+    String PAGE = "page";
 }

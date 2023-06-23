@@ -11,9 +11,10 @@ public class DateUtil extends DateUtils {
 
     private static final SimpleDateFormat YYYY_MM_DD = new SimpleDateFormat(PC.DATA_FORM_1);
 
-    public static long getData(){
+    public static long getData() {
         return System.currentTimeMillis();// 这个方式最快 new Date().getTime() 也可以。
     }
+
     public static String tostr_Day(Long timestamp) {
         final Date date = new Date(timestamp);
         return YYYY_MM_DD.format(date);
@@ -261,9 +262,10 @@ public class DateUtil extends DateUtils {
      * 跟据时间区间跳过节假日，指定1-7 星期节点周期cyc (1,2,3)
      * 计算 节点共多少个
      * calHolidayType 计算节假日类型 0正常计算，1跳过假日
+     *
      * @return
      */
-    public int budget(List<HolidayDO> list,String cyc,Long startDate,Long endDate,int calHolidayType) {
+    public int budget(List<HolidayDO> list, String cyc, Long startDate, Long endDate, int calHolidayType) {
         int k = 0;//课节
         //周期 cyc
 

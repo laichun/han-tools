@@ -41,4 +41,6 @@ public class QueryDto {
             "    in 包含（数组）")
     private String condition;
 
+
+
 }

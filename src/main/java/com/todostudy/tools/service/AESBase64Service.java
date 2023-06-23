@@ -18,7 +18,7 @@ public class AESBase64Service {
     @Value("${han.tools.aesIv}")
     private String IV;
 
-	public String encrypt(String sSrc) throws Exception {
+    public String encrypt(String sSrc) throws Exception {
 
         // 判断Key是否为16位
         if (sKey.length() != 16) {
@@ -31,12 +31,12 @@ public class AESBase64Service {
         IvParameterSpec iv = new IvParameterSpec(IV.getBytes());
         cipher.init(Cipher.ENCRYPT_MODE, skeySpec, iv);
         byte[] encrypted = cipher.doFinal(sSrc.getBytes(PC.UTF8));
-        
+
         return Base64.getEncoder().encodeToString(encrypted);
     }
 
     // 解密
-    public String decrypt(String sSrc ) throws Exception {
+    public String decrypt(String sSrc) throws Exception {
         try {
 
             // 判断Key是否为16位
@@ -52,7 +52,7 @@ public class AESBase64Service {
             byte[] encrypted1 = Base64.getDecoder().decode(sSrc);
             try {
                 byte[] original = cipher.doFinal(encrypted1);
-                String originalString = new String(original,PC.UTF8);
+                String originalString = new String(original, PC.UTF8);
                 return originalString;
             } catch (Exception e) {
                 System.out.println(e.toString());
@@ -63,7 +63,6 @@ public class AESBase64Service {
             return null;
         }
     }
-
 
 
 }

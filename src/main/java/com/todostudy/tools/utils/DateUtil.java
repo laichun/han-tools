@@ -95,7 +95,7 @@ public class DateUtil extends DateUtils {
      * @param two 日期2
      * @return 间隔秒数
      */
-    public static long getDiffSeconds(Date one, Date two) {
+    public static long subtractionDaySeconds(Date one, Date two) {
         Calendar sysDate = new GregorianCalendar();
         sysDate.setTime(one);
         Calendar failDate = new GregorianCalendar();
@@ -110,12 +110,16 @@ public class DateUtil extends DateUtils {
      * @param two
      * @return 间隔天数
      */
-    public static long getDiffDays(Date one, Date two) {
+    public static long subtractionDay(Date one, Date two) {
         Calendar sysDate = new GregorianCalendar();
         sysDate.setTime(one);
         Calendar failDate = new GregorianCalendar();
         failDate.setTime(two);
-        return (sysDate.getTimeInMillis() - failDate.getTimeInMillis()) / (24 * 60 * 60 * 1000);
+        return (sysDate.getTimeInMillis() - failDate.getTimeInMillis()) / (24 * 360 * 1000);
+    }
+
+    public static long subtractionDay(long one, long two) {
+        return (one - two) / (24 * 360 * 1000);
     }
 
     public static String getStringByFormat(String format) {

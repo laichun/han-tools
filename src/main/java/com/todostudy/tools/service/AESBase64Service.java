@@ -1,6 +1,7 @@
 package com.todostudy.tools.service;
 
 import com.todostudy.tools.fm.PC;
+import lombok.Setter;
 import org.springframework.beans.factory.annotation.Value;
 
 import javax.crypto.Cipher;
@@ -13,10 +14,16 @@ import java.util.Base64;
  */
 public class AESBase64Service {
 
-    @Value("${han.tools.aesKey}")
+    private AESBase64Service(){}
+    @Setter
     public String sKey;// 必须16位
-    @Value("${han.tools.aesIv}")
-    private String IV;
+
+    @Setter
+    private String IV;//也是用16位
+    public AESBase64Service(String skey,String IV){
+        this.sKey = skey;
+        this.IV = IV;
+    }
 
     public String encrypt(String sSrc) throws Exception {
 
@@ -25,7 +32,7 @@ public class AESBase64Service {
             return null;
         }
         byte[] raw = sKey.getBytes(PC.UTF8);
-        SecretKeySpec skeySpec = new SecretKeySpec(raw, "AES");
+        SecretKeySpec skeySpec = new SecretKeySpec(raw, PC.AES);
         Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");//"算法/模式/补码方式"
         //CBC模式需要配置偏移量，设置一个向量，达到密码唯一性，增加加密算法的强度
         IvParameterSpec iv = new IvParameterSpec(IV.getBytes());
@@ -44,7 +51,7 @@ public class AESBase64Service {
                 return null;
             }
             byte[] raw = sKey.getBytes(PC.UTF8);
-            SecretKeySpec skeySpec = new SecretKeySpec(raw, "AES");
+            SecretKeySpec skeySpec = new SecretKeySpec(raw, PC.AES);
             Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
             //CBC模式需要配置偏移量，设置这个后，不会出来同一个明文加密为同一个密文的问题，达到密文唯一性
             IvParameterSpec iv = new IvParameterSpec(IV.getBytes());

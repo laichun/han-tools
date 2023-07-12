@@ -19,6 +19,8 @@ package com.todostudy.tools.service;
  * - `RSA/ECB/OAEPWithSHA-256AndMGF1Padding` （ `1024，2048` ）
  */
 
+import com.todostudy.tools.fm.PC;
+import lombok.Setter;
 import org.springframework.beans.factory.annotation.Value;
 
 import javax.annotation.PostConstruct;
@@ -45,8 +47,12 @@ import java.util.Base64;
  */
 public class DesService {
 
-    @Value("${han.tools.desKey}")
+    private DesService(){}
+    @Setter
     private String desKey;
+    public DesService(String desKey){
+        this.desKey = desKey;
+    }
     private Key key;// 密钥的key值
     private byte[] DESkey;
     private byte[] DESIV = { 0x12, 0x34, 0x56, 0x78, (byte) 0x90, (byte) 0xAB,
@@ -56,10 +62,10 @@ public class DesService {
     @PostConstruct
     public void init() {
         try {
-            this.DESkey = desKey.getBytes("UTF-8");// 设置密钥 大于=8位
+            this.DESkey = desKey.getBytes(PC.UTF8);// 设置密钥 大于=8位
             DESKeySpec keySpec = new DESKeySpec(DESkey);// 设置密钥参数
             iv = new IvParameterSpec(DESIV);// 设置向量
-            SecretKeyFactory keyFactory = SecretKeyFactory.getInstance("DES");// 获得密钥工厂
+            SecretKeyFactory keyFactory = SecretKeyFactory.getInstance(PC.DES);// 获得密钥工厂
             key = keyFactory.generateSecret(keySpec);// 得到密钥对象
         } catch (Exception e) {
             e.printStackTrace();
@@ -78,7 +84,7 @@ public class DesService {
         byte[] byteMing = null;
         String outputString = "";
         try {
-            byteMing = inputString.getBytes("UTF-8");
+            byteMing = inputString.getBytes(PC.UTF8);
             byteMi = this.getEncCode(byteMing);
             byte[] temp = Base64.getEncoder().encode(byteMi);
             outputString = new String(temp);
@@ -104,7 +110,7 @@ public class DesService {
         try {
             byteMi = Base64.getDecoder().decode(inputString.getBytes());
             byteMing = this.getDesCode(byteMi);
-            strMing = new String(byteMing, "UTF8");
+            strMing = new String(byteMing, PC.UTF8);
         } catch (Exception e) {
         } finally {
             byteMing = null;
@@ -125,7 +131,7 @@ public class DesService {
         Cipher cipher;
         try {
             // 得到Cipher实例  CBC是工作模式，DES一共有电子密码本模式（ECB）、加密分组链接模式（CBC）、加密反馈模式（CFB）和输出反馈模式（OFB）四种模式，
-            cipher = Cipher.getInstance("DES/CBC/PKCS5Padding");
+            cipher = Cipher.getInstance(PC.DES_CIPHER);
             cipher.init(Cipher.ENCRYPT_MODE, key, iv);
             byteFina = cipher.doFinal(bt);
         } catch (Exception e) {
@@ -148,7 +154,7 @@ public class DesService {
         byte[] byteFina = null;
         try {
             // 得到Cipher实例
-            cipher = Cipher.getInstance("DES/CBC/PKCS5Padding");
+            cipher = Cipher.getInstance(PC.DES_CIPHER);
             cipher.init(Cipher.DECRYPT_MODE, key, iv);
             byteFina = cipher.doFinal(bt);
         } catch (Exception e) {

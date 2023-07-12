@@ -4,14 +4,14 @@ import java.util.concurrent.*;
 
 /**
  * @author hanson
- * hwo to use:
+ * hwo to use: 多个提交并行执行
  * Callable<String> task=()->{
  *             return "ss";
  *         };
  *         Future future = submit(task);
  *         System.out.println(future.get());
  */
-public class DoByThreads {
+public class ParallelProcessor {
     private static ExecutorService exec = new ThreadPoolExecutor(2, 4, 0L,
             TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>(200),
             new ThreadPoolExecutor.CallerRunsPolicy());

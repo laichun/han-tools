@@ -1,5 +1,7 @@
 package com.todostudy.tools.fm;
 
+import com.baomidou.mybatisplus.core.toolkit.AES;
+
 public interface PC {
 
     int t0 = 0;
@@ -18,6 +20,9 @@ public interface PC {
     String f1 = ":";
     String MSM = "_msm";
     String REQ = "req";
+    String DES="DES";
+    String AES="AES";
+    String DES_CIPHER="DES/CBC/PKCS5Padding";
     String JSONB = "jsonb";
     String JSON = "JSON";
     String ORGAN_ID = "organizationId";

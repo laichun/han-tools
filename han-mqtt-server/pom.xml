@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+	 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<!--POM-->
+	<groupId>com.todostudy</groupId>
+	<artifactId>han-mqtt-server</artifactId>
+	<version>${hanversion}</version>
+	<packaging>pom</packaging>
+
+	<name>${project.artifactId}</name>
+	<description>han mqtt tools.</description>
+	<url>https://www.todostudy.com</url>
+
+	<developers>
+		<developer>
+			<name>hanson</name>
+			<email>317856394@qq.com</email>
+			<organization>hanson</organization>
+			<organizationUrl>https://todostudy.com</organizationUrl>
+			<roles>
+				<role>Developer</role>
+			</roles>
+			<timezone>+8</timezone>
+		</developer>
+	</developers>
+
+
+	<!--属性-->
+	<properties>
+		<hanversion>1.8</hanversion>
+		<maven.compiler.source>11</maven.compiler.source>
+		<maven.compiler.target>11</maven.compiler.target>
+		<maven.compiler.compilerVersion>11</maven.compiler.compilerVersion>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<maven-compiler-plugin.version>3.8.0</maven-compiler-plugin.version>
+		<maven-surefire-plugin.version>2.22.0</maven-surefire-plugin.version>
+		<spring-boot.version>2.3.6.RELEASE</spring-boot.version>
+		<hutool.version>4.1.6</hutool.version>
+		<ignite.version>2.14.0</ignite.version>
+	</properties>
+	<!--模块-->
+	<modules>
+		<module>mqtt-common</module>
+		<!--<module>mqtt-store</module>-->
+		<module>mqtt-broker</module>
+		<module>mqtt-example</module>
+		<module>han-mqtt-service-spring-stater</module>
+		<module>mqtt-server</module>
+        <module>mqtt-example-client</module>
+    </modules>
+
+	<!--依赖管理-->
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-dependencies</artifactId>
+				<version>${spring-boot.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
+
+</project>

@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+	 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<!--POM-->
+	<parent>
+		<groupId>com.todostudy</groupId>
+		<artifactId>han-mqtt-server</artifactId>
+		<version>${hanversion}</version>
+		<relativePath>../pom.xml</relativePath>
+	</parent>
+	<!--模块-->
+	<artifactId>mqtt-broker</artifactId>
+	<!--依赖-->
+	<dependencies>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.todostudy</groupId>
+			<artifactId>mqtt-common</artifactId>
+			<version>${hanversion}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.todostudy</groupId>
+			<artifactId>han-mqtt-service-spring-stater</artifactId>
+			<version>${hanversion}</version>
+		</dependency>
+
+		<!--<dependency>
+			<groupId>com.todostudy</groupId>
+			<artifactId>mqtt-auth</artifactId>
+			<version>${iot-mqtt-server.version}</version>
+		</dependency>-->
+
+		<dependency>
+			<groupId>net.dreamlu</groupId>
+			<artifactId>mica-net-core</artifactId>
+			<version>0.1.5</version>
+		</dependency>
+		<dependency>
+			<groupId>io.netty</groupId>
+			<artifactId>netty-handler</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>io.netty</groupId>
+			<artifactId>netty-codec-mqtt</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>io.netty</groupId>
+			<artifactId>netty-codec-http</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>io.netty</groupId>
+			<artifactId>netty-transport-native-epoll</artifactId>
+			<classifier>linux-x86_64</classifier>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-configuration-processor</artifactId>
+		</dependency>
+        <dependency>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
+            <version>6.14.3</version>
+            <scope>test</scope>
+        </dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+
+</project>

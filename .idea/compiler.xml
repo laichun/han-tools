@@ -7,7 +7,13 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="han-tools" />
+        <module name="han-mqtt-service-spring-stater" />
+        <module name="mqtt-broker" />
+        <module name="mqtt-example-client" />
+        <module name="mqtt-example" />
+        <module name="mqtt-common" />
+        <module name="mqtt-server" />
+        <module name="han-common-tools" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel target="11" />

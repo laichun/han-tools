@@ -1,0 +1,48 @@
+# 开发环境配置
+spring:
+        profiles: dev
+        cache: redis
+        redis:
+                host: 192.168.6.43
+                port: 6379
+                password: 1234qwer
+                database: 5
+han:
+        mqtt:
+                broker:
+                        http-enable: false
+                        http-api:
+                                send-auth: http://192.168.6.44:8080/api/auth #返回true /false
+                                send-sub-topic: http://192.168.6.44:8080/api/checkTopic #返回true /false
+                                send-msg: http://192.168.6.44:8080/api/message  #无需返回
+                                send-state: http://192.168.6.44:8080/api/state  #无需返回
+                        cache-type: memory
+                        ssl-auth: false # 默认账号密码认证，默认不开启ssl认证
+                        ssl-config:
+                                enable: false # 默认false 单向认证， true是双向认证，
+                                keystore-path: keystore/sChat.jks
+                                keystore-pwd: 123456
+                                truststore-path: keystore/xxx.ca
+                                truststore-pwd:    # 请设置和 keystore-pwd 同一个秘密，代码中直接使用的是keystore-pwd ,可以自行修改
+                        ws-enable: true
+                        # broker唯一标识
+                        id: mqtt-broker-1
+                        # SSL端口
+                        ssl-port: 1883
+                        # SSL密钥文件密码
+                        ssl-password: 123456
+                        # 传输大小 单位：m ,默认2m
+                        max-trans-message: 2
+                        # websocket端口
+                        websocket-ssl-port: 9995
+                        # websocket path 值
+                        websocket-path: /mqtt
+                        # 心跳时间(秒)
+                        keep-alive: 60
+                        # 开启Epoll模式, linux下建议开启
+                        use-epoll: false
+logging:
+        level:
+                root: info
+                com.todostudy.iot.mqtt.server: debug
+

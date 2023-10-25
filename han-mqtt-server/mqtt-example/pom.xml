@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+	 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<!--POM-->
+	<parent>
+		<groupId>com.todostudy</groupId>
+		<artifactId>han-mqtt-server</artifactId>
+		<version>${hanversion}</version>
+	</parent>
+	<!--模块-->
+	<artifactId>mqtt-example</artifactId>
+	<!--依赖-->
+	<dependencies>
+		<dependency>
+			<groupId>com.todostudy</groupId>
+			<artifactId>han-mqtt-service-spring-stater</artifactId>
+			<version>${hanversion}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.todostudy</groupId>
+			<artifactId>mqtt-common</artifactId>
+			<version>${hanversion}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>cn.hutool</groupId>
+			<artifactId>hutool-crypto</artifactId>
+			<version>${hutool.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+		</dependency>
+	</dependencies>
+
+
+</project>

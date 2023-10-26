@@ -4,19 +4,35 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
-    <packaging>pom</packaging>
-    <modules>
-        <module>han-mqtt-server</module>
-        <module>han-common-tools</module>
-    </modules>
-
     <groupId>com.todostudy</groupId>
     <artifactId>han-tools</artifactId>
 
-    <version>1.1.5</version>
+    <version>1.1.6</version>
+    <packaging>pom</packaging>
     <name>han-tools</name>
     <url>https://github.com/laichun/han-tools</url>
     <description>han-tools 开发工具类</description>
+
+    <properties>
+        <hanversion>1.1.6</hanversion>
+        <spring-boot.version>2.6.6</spring-boot.version>
+        <hutool.version>4.1.6</hutool.version>
+        <swagger.version>3.0.0</swagger.version>
+        <java.version>11</java.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven-compiler-plugin.version>3.8.0</maven-compiler-plugin.version>
+        <maven-surefire-plugin.version>2.22.0</maven-surefire-plugin.version>
+    </properties>
+
+    <modules>
+        <module>han-common-tools</module>
+        <module>han-mqtt-server/mqtt-common</module>
+        <module>han-mqtt-server/mqtt-server</module>
+        <module>han-mqtt-server/han-mqtt-service-spring-stater</module>
+        <module>han-mqtt-server/mqtt-broker</module>
+        <module>han-mqtt-server/mqtt-example</module>
+        <module>han-mqtt-server/mqtt-example-client</module>
+    </modules>
 
     <developers>
         <developer>
@@ -39,12 +55,6 @@
         </license>
     </licenses>
 
-    <properties>
-        <spring-boot.version>2.5.9</spring-boot.version>
-        <swagger.version>3.0.0</swagger.version>
-        <java.version>11</java.version>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    </properties>
 
     <scm>
         <url>https://github.com/laichun/han-tools</url>

@@ -28,7 +28,6 @@ public class PublishMessage implements MqttCallback {
         }
         try {
             String data = new String(messByte, "utf-8");
-            System.out.println(data);
            // publish(new MqttTopic("/topic/1",1),)
         } catch (Exception e) {
             e.printStackTrace();

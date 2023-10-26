@@ -96,19 +96,8 @@ public class DateUtil extends DateUtils {
         return gregorianCalendar.getTimeInMillis();
     }
 
-    public static void main(String[] args) {
-        long times = System.currentTimeMillis();
-        System.out.println(times);
-        GregorianCalendar gregorianCalendar = new GregorianCalendar();
-        gregorianCalendar.setTimeInMillis(times);
-        gregorianCalendar.add(GregorianCalendar.DATE, 1);
-        System.out.println(gregorianCalendar.getTimeInMillis());
-        System.out.println(times+(1000*60*60*24));
-
-        gregorianCalendar.add(GregorianCalendar.DATE, -2);
-        System.out.println(gregorianCalendar.getTimeInMillis());
-        System.out.println(times-(1000*60*60*24));
-    }
+  /*  public static void main(String[] args) {
+    }*/
 
     /**
      * 取得两个日期间隔秒数（日期1-日期2）

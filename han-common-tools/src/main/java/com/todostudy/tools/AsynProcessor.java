@@ -9,7 +9,7 @@ import java.util.concurrent.*;
  *             return "ss";
  *         };
  *         Future future = submit(task);
- *         System.out.println(future.get());
+ *         future.get();
  */
 public class AsynProcessor {
     private static ExecutorService exec = new ThreadPoolExecutor(2, 4, 0L,

@@ -4,9 +4,10 @@
 	<modelVersion>4.0.0</modelVersion>
 	<!--POM-->
 	<parent>
+		<artifactId>han-tools</artifactId>
 		<groupId>com.todostudy</groupId>
-		<artifactId>han-mqtt-server</artifactId>
-		<version>${hanversion}</version>
+		<version>1.1.6</version>
+		<relativePath>../../pom.xml</relativePath>
 	</parent>
 	<!--模块-->
 	<artifactId>mqtt-example</artifactId>
@@ -17,14 +18,11 @@
 			<artifactId>han-mqtt-service-spring-stater</artifactId>
 			<version>${hanversion}</version>
 		</dependency>
-		<dependency>
-			<groupId>com.todostudy</groupId>
-			<artifactId>mqtt-common</artifactId>
-			<version>${hanversion}</version>
-		</dependency>
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter</artifactId>
+			<version>${spring-boot.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>cn.hutool</groupId>
@@ -34,8 +32,20 @@
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
+			<version>1.18.12</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-redis</artifactId>
+			<version>${spring-boot.version}</version>
+			<scope>compile</scope>
 		</dependency>
 	</dependencies>
+
+	<dependencyManagement>
+
+	</dependencyManagement>
 
 
 </project>

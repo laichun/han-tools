@@ -4,9 +4,10 @@
 	<modelVersion>4.0.0</modelVersion>
     <!--POM-->
 	<parent>
+		<artifactId>han-tools</artifactId>
 		<groupId>com.todostudy</groupId>
-		<artifactId>han-mqtt-server</artifactId>
-		<version>${hanversion}</version>
+		<version>1.1.6</version>
+		<relativePath>../../pom.xml</relativePath>
 	</parent>
 	<!--模块-->
 	<artifactId>mqtt-common</artifactId>
@@ -27,6 +28,19 @@
             <artifactId>lombok</artifactId>
         </dependency>
     </dependencies>
+
+	<!--依赖管理-->
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-dependencies</artifactId>
+				<version>${spring-boot.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
 
 	<build>
 		<plugins>

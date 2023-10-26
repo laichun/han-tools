@@ -5,17 +5,12 @@
     <parent>
         <artifactId>han-tools</artifactId>
         <groupId>com.todostudy</groupId>
-        <version>1.1.5</version>
+        <version>1.1.6</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>han-common-tools</artifactId>
 
-    <properties>
-        <maven.compiler.source>11</maven.compiler.source>
-        <maven.compiler.target>11</maven.compiler.target>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    </properties>
 
     <dependencies>
         <dependency>

@@ -7,6 +7,7 @@ import com.todostudy.iot.mqtt.server.api.ICheckSubscribeValidator;
 import com.todostudy.iot.mqtt.server.api.IMqttListenConnect;
 import com.todostudy.iot.mqtt.server.api.IMqttListenMessage;
 import com.todostudy.iot.mqtt.server.common.Tools;
+import com.todostudy.iot.mqtt.server.protocol.MqttServerTemplateProcessor;
 import com.todostudy.iot.mqtt.server.session.SessionStoreService;
 import com.todostudy.iot.mqtt.server.store.message.MqttServerTemplate;
 import lombok.extern.slf4j.Slf4j;
@@ -14,6 +15,7 @@ import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.data.redis.core.RedisTemplate;
 
 @Slf4j
@@ -21,13 +23,15 @@ import org.springframework.data.redis.core.RedisTemplate;
 @EnableConfigurationProperties(value = {HanMqttBrokerProperties.class})
 public class MqttServiceConfiguration {
 
+    private MqttServerTemplateProcessor mqttServerTemplateProcessor;
+
     @Bean
     public MqttServerCreator mqttServerCreator(HanMqttBrokerProperties properties,
                                                ObjectProvider<IMqttListenConnect> iMqttListenConnectsProvider,
                                                ObjectProvider<IMqttListenMessage> iMqttListenMessagesProvider,
                                                ObjectProvider<IAuthService> authServicesProvider,
                                                ObjectProvider<ICheckSubscribeValidator> checkSubscribeValidatorsProvider,
-                                               ObjectProvider<RedisTemplate> redisTemplatesProvider){
+                                               ObjectProvider<RedisTemplate> redisTemplate){
 
         MqttServerCreator mqttServerCreator = MqttBrokerServer.createServer().sslPort(properties.getSslPort())
                 .sslAuth(properties.isSslAuth()).wsEnable(properties.isWsEnable())
@@ -45,13 +49,9 @@ public class MqttServiceConfiguration {
            ,properties.getSslConfig().getKeystorePath(),properties.getSslConfig().getKeystorePwd(),
                    properties.getSslConfig().getTruststorePath(),properties.getSslConfig().getTruststorePwd()));
         }
-        //检查如果使用redis 必须注入redisTemplates
+        //检查如果使用redis 必须注入 redisTemplate
         if(properties.getCacheType().equals(Tools.CACHE_REDIS)){
-            if(redisTemplatesProvider==null){
-                throw new RuntimeException(" redisTemplates is not null");
-            }else{
-                redisTemplatesProvider.ifAvailable(mqttServerCreator::redisTemplate);
-            }
+            redisTemplate.ifAvailable(mqttServerCreator::redisTemplate);
         }
 
         return mqttServerCreator;
@@ -64,6 +64,7 @@ public class MqttServiceConfiguration {
     @Bean
     public MqttBrokerServer mqttBrokerServer(MqttServerCreator mqttServerCreator,SessionStoreService sessionStoreService) {
         MqttBrokerServer mqttBrokerServer = mqttServerCreator.build(sessionStoreService);
+        this.mqttServerTemplateProcessor = mqttBrokerServer.getMqttServerTemplateProcessor();
         return mqttBrokerServer;
     }
 
@@ -71,10 +72,10 @@ public class MqttServiceConfiguration {
     public MqttLifecycleLauncher mqttServerLauncher(MqttBrokerServer mqttBrokerServer) {
         return new MqttLifecycleLauncher(mqttBrokerServer);
     }
-
     @Bean
-    public MqttServerTemplate mqttServerTemplate(MqttBrokerServer mqttBrokerServer) {
-        return new MqttServerTemplate(mqttBrokerServer.getMqttServerTemplateProcessor());
+    @Lazy
+    public MqttServerTemplate mqttServerTemplate() {
+        return new MqttServerTemplate(mqttServerTemplateProcessor);
     }
 
 

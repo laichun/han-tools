@@ -21,7 +21,7 @@ public class RsaKeyUtil {
 	/**
 	 * 生成私钥文件
 	 */
-	public static void main(String[] args) {
+/*	public static void main(String[] args) {
 		System.out.println();
 		System.out.print("输入保存密钥文件的路径(如: f:/rsa/): ");
 		Scanner scanner = new Scanner(System.in);
@@ -30,6 +30,6 @@ public class RsaKeyUtil {
 		RSAPrivateKey privateKey = (RSAPrivateKey) keyPair.getPrivate();
 		String privatePath = path + "auth-private.key";
 		IoUtil.writeObjects(FileUtil.getOutputStream(privatePath), true, privateKey);
-	}
+	}*/
 
 }

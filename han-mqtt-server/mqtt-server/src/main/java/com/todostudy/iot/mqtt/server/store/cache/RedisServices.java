@@ -4,17 +4,23 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 public class RedisServices {
 
-    final static String MQTT_RETAIN="mqtt:retain:";
-    final static String MQTT_DUPPUB="mqtt:duppub:";
-    final static String MQTT_PUBREL="mqtt:PUBREL:";
+    public final static String MQTT_RETAIN="mqtt:retain:";
+    public final static String MQTT_DUPPUB="mqtt:duppub:";
+    public final static String MQTT_PUBREL="mqtt:PUBREL:";
 
-    private final RedisTemplate redisTemplate;
+    private RedisTemplate redisTemplate;
+    /**
+     * Retain 消息过期时间
+     */
+    private long retainMsgTime; //小时
 
-    public RedisServices(RedisTemplate redisTemplate) {
+    public RedisServices(RedisTemplate redisTemplate, long retainMsgTime) {
         this.redisTemplate = redisTemplate;
+        this.retainMsgTime = retainMsgTime;
     }
 
     public RedisTemplate getRedisTemplate(){
@@ -30,6 +36,13 @@ public class RedisServices {
      */
     public <T> void setCacheObject(final String key, final T value) {
         redisTemplate.opsForValue().set(key, value);
+    }
+
+    /**
+     * retainMsg 专用
+     */
+    public <T> void setCacheObjectRetainMsg(final String key, final T value) {
+        redisTemplate.opsForValue().set(key, value, retainMsgTime, TimeUnit.HOURS);
     }
 
     /**

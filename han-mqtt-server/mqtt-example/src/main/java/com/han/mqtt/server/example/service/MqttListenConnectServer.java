@@ -2,8 +2,11 @@ package com.han.mqtt.server.example.service;
 
 import com.todostudy.iot.mqtt.server.api.IMqttListenConnect;
 import com.todostudy.iot.mqtt.server.common.message.IMqttServerTemplate;
+import com.todostudy.iot.mqtt.server.store.message.MqttServerTemplate;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.SmartInitializingSingleton;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 
 /**
@@ -12,10 +15,7 @@ import org.springframework.stereotype.Service;
  */
 @Slf4j
 @Service
-public class MqttListenConnectServer implements IMqttListenConnect {
-
-    @Autowired
-    private IMqttServerTemplate mqttServerTemplate;
+public class MqttListenConnectServer implements IMqttListenConnect{
 
 
     @Override
@@ -27,4 +27,7 @@ public class MqttListenConnectServer implements IMqttListenConnect {
     public void offline(String clientId, String username, String reason) {
         log.info("------offline--{}", clientId);
     }
+
+
+
 }

@@ -4,6 +4,7 @@ import com.todostudy.hans.stater.config.HanMqttBrokerProperties;
 import com.todostudy.iot.mqtt.server.api.IMqttListenMessage;
 import com.todostudy.iot.mqtt.server.common.Tools;
 import io.netty.handler.codec.mqtt.MqttQoS;
+import org.springframework.beans.factory.SmartInitializingSingleton;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.configurationprocessor.json.JSONException;
@@ -14,7 +15,7 @@ import org.springframework.util.Assert;
 
 @ConditionalOnProperty(value = "han.mqtt.broker.http-enable", havingValue = "true")
 @Component
-public class HttpMqttListenMessage implements IMqttListenMessage {
+public class HttpMqttListenMessage implements IMqttListenMessage  {
     @Autowired
     HanMqttBrokerProperties hanMqttBrokerProperties;
     @Override
@@ -30,4 +31,5 @@ public class HttpMqttListenMessage implements IMqttListenMessage {
             }
         }
     }
+
 }

@@ -97,6 +97,10 @@ public class HanMqttBrokerProperties {
 	 * 集群配置, 当组播模式禁用时, 使用静态IP开启配置集群
 	 */
 	private String staticIpAddresses;
+	/**
+	 * Retain 消息过期时间
+	 */
+	private long retainMsgTime=10; //小时
 
 	private HttpApi httpApi = new HttpApi();
 	private boolean httpEnable;

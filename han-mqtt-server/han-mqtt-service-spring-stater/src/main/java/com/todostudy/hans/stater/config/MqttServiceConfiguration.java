@@ -34,7 +34,7 @@ public class MqttServiceConfiguration {
                                                ObjectProvider<RedisTemplate> redisTemplate){
 
         MqttServerCreator mqttServerCreator = MqttBrokerServer.createServer().sslPort(properties.getSslPort())
-                .sslAuth(properties.isSslAuth()).wsEnable(properties.isWsEnable())
+                .sslAuth(properties.isSslAuth()).wsEnable(properties.isWsEnable()).retainMsgTime(properties.getRetainMsgTime())
                 .cacheType(properties.getCacheType()).port(properties.getPort()).maxTransMessage(properties.getMaxTransMessage());
 
         //注入
@@ -64,7 +64,6 @@ public class MqttServiceConfiguration {
     @Bean
     public MqttBrokerServer mqttBrokerServer(MqttServerCreator mqttServerCreator,SessionStoreService sessionStoreService) {
         MqttBrokerServer mqttBrokerServer = mqttServerCreator.build(sessionStoreService);
-        this.mqttServerTemplateProcessor = mqttBrokerServer.getMqttServerTemplateProcessor();
         return mqttBrokerServer;
     }
 
@@ -74,8 +73,8 @@ public class MqttServiceConfiguration {
     }
     @Bean
     @Lazy
-    public MqttServerTemplate mqttServerTemplate() {
-        return new MqttServerTemplate(mqttServerTemplateProcessor);
+    public MqttServerTemplate mqttServerTemplate(MqttBrokerServer mqttBrokerServer) {
+        return new MqttServerTemplate(mqttBrokerServer.getMqttServerTemplateProcessor());
     }
 
 

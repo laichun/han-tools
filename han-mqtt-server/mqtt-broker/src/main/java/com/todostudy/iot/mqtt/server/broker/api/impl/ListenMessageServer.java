@@ -2,10 +2,13 @@ package com.todostudy.iot.mqtt.server.broker.api.impl;
 
 import com.todostudy.iot.mqtt.server.api.IMqttListenMessage;
 import com.todostudy.iot.mqtt.server.common.message.IMqttServerTemplate;
+import com.todostudy.iot.mqtt.server.store.message.MqttServerTemplate;
 import io.netty.handler.codec.mqtt.MqttQoS;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.SmartInitializingSingleton;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 
 /**
@@ -15,9 +18,10 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @ConditionalOnProperty(prefix = "han",name = "mqtt.broker.http-enable",havingValue = "false")
 @Service
-public class ListenMessageServer implements IMqttListenMessage {
+public class ListenMessageServer implements IMqttListenMessage, SmartInitializingSingleton {
 
     @Autowired
+    private ApplicationContext applicationContext;
     private IMqttServerTemplate mqttServerTemplate;
 
     @Override
@@ -30,5 +34,10 @@ public class ListenMessageServer implements IMqttListenMessage {
            //测试发送离线消息
            // mqttServerTemplate.sendMsgRetain("laich","hanson/dddd/ts",MqttQoS.AT_MOST_ONCE,"{\"msg:\":\"hason-send-retain-msg-success\"}".getBytes());
         }
+    }
+    @Override
+    public void afterSingletonsInstantiated() {
+        // 单利 bean 初始化完成之后从 ApplicationContext 中获取 bean
+        mqttServerTemplate = applicationContext.getBean(MqttServerTemplate.class);
     }
 }

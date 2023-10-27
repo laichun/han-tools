@@ -112,28 +112,6 @@ public class SubscribeRedisStoreService implements ISubscribeStoreService {
 
 		});
 
-		/*subscribeNotWildcardCache.forEach(entry -> {
-			ConcurrentHashMap<String, SubscribeStore> map = entry.getValue();
-			if (map.containsKey(clientId)) {
-				map.remove(clientId);
-				if (map.size() > 0) {
-					subscribeNotWildcardCache.put(entry.getKey(), map);
-				} else {
-					subscribeNotWildcardCache.remove(entry.getKey());
-				}
-			}
-		});*/
-		/*subscribeWildcardCache.forEach(entry -> {
-			ConcurrentHashMap<String, SubscribeStore> map = entry.getValue();
-			if (map.containsKey(clientId)) {
-				map.remove(clientId);
-				if (map.size() > 0) {
-					subscribeWildcardCache.put(entry.getKey(), map);
-				} else {
-					subscribeWildcardCache.remove(entry.getKey());
-				}
-			}
-		});*/
 	}
 
 	@Override
@@ -173,32 +151,6 @@ public class SubscribeRedisStoreService implements ISubscribeStoreService {
 				}
 			}
 		});
-		/*subscribeWildcardCache.forEach(entry -> {
-			String topicFilter = entry.getKey();
-			if (StrUtil.split(topic, '/').size() >= StrUtil.split(topicFilter, '/').size()) {
-				List<String> splitTopics = StrUtil.split(topic, '/');
-				List<String> spliteTopicFilters = StrUtil.split(topicFilter, '/');
-				String newTopicFilter = "";
-				for (int i = 0; i < spliteTopicFilters.size(); i++) {
-					String value = spliteTopicFilters.get(i);
-					if (value.equals("+")) {
-						newTopicFilter = newTopicFilter + "+/";
-					} else if (value.equals("#")) {
-						newTopicFilter = newTopicFilter + "#/";
-						break;
-					} else {
-						newTopicFilter = newTopicFilter + splitTopics.get(i) + "/";
-					}
-				}
-				newTopicFilter = StrUtil.removeSuffix(newTopicFilter, "/");
-				if (topicFilter.equals(newTopicFilter)) {
-					ConcurrentHashMap<String, SubscribeStore> map = entry.getValue();
-					Collection<SubscribeStore> collection = map.values();
-					List<SubscribeStore> list = new ArrayList<SubscribeStore>(collection);
-					subscribeStores.addAll(list);
-				}
-			}
-		});*/
 		return subscribeStores;
 	}
 

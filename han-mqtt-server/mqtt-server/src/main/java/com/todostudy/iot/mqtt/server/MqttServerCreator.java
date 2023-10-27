@@ -79,6 +79,11 @@ public class MqttServerCreator {
     private int port = 1883;
 
     /**
+     * Retain 消息过期时间
+     */
+    private long retainMsgTime; //小时
+
+    /**
      * 心跳超时时间(单位: 毫秒 默认: 1000 * 120)，如果用户不希望框架层面做心跳相关工作，请把此值设为0或负数
      */
     private Long heartbeatTimeout;
@@ -105,6 +110,7 @@ public class MqttServerCreator {
 
 
 
+
     public MqttBrokerServer build(SessionStoreService sessionStoreService) {
         //内部bean的初始化
         if(getCacheType().equals(Tools.CACHE_MEMORY)){
@@ -115,7 +121,7 @@ public class MqttServerCreator {
             subscribeStoreService=new SubscribeStoreMemoryService();
 
         }else if(getCacheType().equals(Tools.CACHE_REDIS)){
-            redisServices=new RedisServices(redisTemplate);
+            redisServices=new RedisServices(redisTemplate,retainMsgTime);
             messageIdService = new MessageIdRedisService(redisServices);
             dupPublishMessageStoreService=new DupPublishMessageRedisStoreService(messageIdService, redisServices);
             dupPubRelMessageStoreService=new DupPubRelMessageRedisStoreService(redisServices);
@@ -151,8 +157,8 @@ public class MqttServerCreator {
         return this;
     }
 
-    public MqttServerCreator subscribeStoreService(ISubscribeStoreService subscribeStoreService) {
-        this.subscribeStoreService = subscribeStoreService;
+    public MqttServerCreator retainMsgTime(long retainMsgTime) {
+        this.retainMsgTime = retainMsgTime;
         return this;
     }
 

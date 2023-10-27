@@ -108,22 +108,7 @@ public class MqttBrokerServer {
 		}
 	}
 
-	//@PostConstruct
-/*	public void start() throws Exception {
-		bossGroup = isUseEpoll() ? new EpollEventLoopGroup() : new NioEventLoopGroup();
-		workerGroup = isUseEpoll() ? new EpollEventLoopGroup() : new NioEventLoopGroup();
-		*//*KeyStore keyStore = KeyStore.getInstance("PKCS12");
-		InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream("keystore/mqtt-broker.pfx");
-		keyStore.load(inputStream, brokerProperties.getSslPassword().toCharArray());
-		KeyManagerFactory kmf = KeyManagerFactory.getInstance("SunX509");
-		kmf.init(keyStore, brokerProperties.getSslPassword().toCharArray());
-		sslContext = SslContextBuilder.forServer(kmf).build();*//*
-		//mqttServer();
-		//startMQTT3();
 
-		websocketServer();
-		log.info("MQTT Broker {} is up and running. Open SSLPort: {} WebSocketSSLPort: {}", "[" + getId() + "]", brokerProperties.getSslPort(), brokerProperties.getWebsocketSslPort());
-	}*/
 
 	//@PreDestroy
 	public void stop() {
@@ -195,17 +180,12 @@ public class MqttBrokerServer {
 					// Netty提供的心跳检测
 					channelPipeline.addFirst("idle", new IdleStateHandler(0, 0, serverCreator.getKeepAlive()));
 					// Netty提供的SSL处理
-
-
-					//SSLEngine sslEngine = sslContext.newEngine(socketChannel.alloc());
-
 					channelPipeline.addLast("ssl", new SslHandler(sslEngine));// 不要ssl就去掉
 					channelPipeline.addLast("decoder", new MqttDecoder(1024*1024*serverCreator.getMaxTransMessage()));
 					channelPipeline.addLast("encoder", MqttEncoder.INSTANCE);
-			/*		channelPipeline.addLast(new MqttDecoder(1024*1024*serverCreator.getMaxTransMessage()));
-					channelPipeline.addLast(MqttEncoder.INSTANCE);*/
+
 					channelPipeline.addLast(mqttBrokerHandler);
-					//channelPipeline.addLast("broker", new BrokerHandler(protocolProcess));
+
 				}
 			})
 			.option(ChannelOption.SO_BACKLOG, serverCreator.getSoBacklog())

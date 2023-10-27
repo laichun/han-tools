@@ -5,7 +5,7 @@ spring:
                 host: 192.168.6.43
                 port: 6379
                 password: 1234qwer
-                database: 5
+                database: 6
 han:
         mqtt:
                 broker:
@@ -16,6 +16,7 @@ han:
                                 send-msg: http://192.168.6.44:8080/api/message  #无需返回
                                 send-state: http://192.168.6.44:8080/api/state  #无需返回
                         cache-type: redis  # redis/memory
+                        retain-msg-time: 2
                         ssl-auth: false # 默认账号密码认证，默认不开启ssl认证
                         ssl-config:
                                 enable: false # 默认false 单向认证， true是双向认证，

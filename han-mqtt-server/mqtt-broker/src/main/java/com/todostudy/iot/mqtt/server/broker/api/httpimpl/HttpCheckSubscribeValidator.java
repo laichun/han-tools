@@ -29,7 +29,7 @@ public class HttpCheckSubscribeValidator implements ICheckSubscribeValidator {
             // http 接口
             Assert.notNull(hanMqttBrokerProperties.getHttpApi().getSendSubTopic(),"sendSubTopic is null");
             try {
-                String res = Tools.httpBuilder().post(hanMqttBrokerProperties.getHttpApi().getSendSubTopic(), new JSONStringer().object().key(Tools.clientId).value(clientId)
+                String res = Tools.httpBuilder().postJson(hanMqttBrokerProperties.getHttpApi().getSendSubTopic(), new JSONStringer().object().key(Tools.clientId).value(clientId)
                         .key(Tools.topic).value(topicSubscriptions).endObject().toString());
                 return Boolean.valueOf(res);
             } catch (JSONException e) {

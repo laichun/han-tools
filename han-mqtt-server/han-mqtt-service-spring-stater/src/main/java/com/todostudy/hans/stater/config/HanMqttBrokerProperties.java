@@ -22,6 +22,9 @@ public class HanMqttBrokerProperties {
 	 */
 	private boolean enabled = true;
 
+	/**
+	 * 缓存类型
+	 */
 	private String cacheType;
 
 	/**

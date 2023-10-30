@@ -1,5 +1,6 @@
 /**
  * Copyright (c) 2018, Mr.Wang (recallcode@aliyun.com) All rights reserved.
+ * modify by hanson 2023-10
  */
 
 package com.todostudy.iot.mqtt.server;
@@ -24,14 +25,12 @@ import io.netty.handler.codec.mqtt.MqttDecoder;
 import io.netty.handler.codec.mqtt.MqttEncoder;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
-import io.netty.handler.ssl.SslContext;
 import io.netty.handler.ssl.SslHandler;
 import io.netty.handler.timeout.IdleStateHandler;
 import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLEngine;
 import java.io.InputStream;
 import java.util.concurrent.TimeUnit;
@@ -41,8 +40,6 @@ import java.util.concurrent.TimeUnit;
  */
 @Getter
 public class MqttBrokerServer {
-
-	//List<String> ciphers = Arrays.asList("ECDHE-RSA-AES128-SHA", "ECDHE-RSA-AES256-SHA", "AES128-SHA", "AES256-SHA", "DES-CBC3-SHA","RSA");
 
 	private final SessionStoreService sessionStoreService;
 
@@ -55,8 +52,6 @@ public class MqttBrokerServer {
 	private EventLoopGroup bossGroup;
 
 	private EventLoopGroup workerGroup;
-
-	private SslContext sslContext;
 
 	private Channel channel;
 
@@ -77,12 +72,11 @@ public class MqttBrokerServer {
 	}
 
 	private static final String PROTOCOL = "TLS";
-	private static SSLContext SERVER_CONTEXT;// 服务器安全套接字协议
 
 	public void start() {
 		bossGroup = serverCreator.isUseEpoll() ? new EpollEventLoopGroup() : new NioEventLoopGroup();
 		workerGroup = serverCreator.isUseEpoll() ? new EpollEventLoopGroup() : new NioEventLoopGroup();
-
+		SSLEngine sslServerEngine=null;
 		try {
 			// start mqtt
 			if (serverCreator.isSslAuth()) {
@@ -91,28 +85,26 @@ public class MqttBrokerServer {
 				if(serverCreator.getSslConfig().isEnable()){
 					caInputStream = this.getClass().getClassLoader().getResourceAsStream(serverCreator.getSslConfig().getTruststorePath());
 				}
-				SSLEngine sslServerEngine = SSLContextFactory.getSslServerEngine(serverCreator.getSslConfig().isEnable(),
+				 sslServerEngine = SSLContextFactory.getSslServerEngine(serverCreator.getSslConfig().isEnable(),
 						inputStream, caInputStream, serverCreator.getSslConfig().getKeystorePwd());
 				mqttSSLServer(sslServerEngine);
+
 			} else {
 				mqttNoSSLServer();
 			}
 
 			// start websocket
 			if (serverCreator.isWsEnable()) {
-				websocketServer();
+				websocketServer(sslServerEngine);
+				log.info("MQTT websocket is start isSslAuth:{} is up and running.  webSocketPort: {},the cacheType:{}", "[" + serverCreator.isSslAuth() + "]",  serverCreator.getWebsocketSslPort(),serverCreator.getCacheType());
 			}
-			log.info("MQTT Broker isSslMQ:{} is up and running. Open SSLPort: {} WebSocketSSLPort: {}", "[" + serverCreator.isSslAuth() + "]", serverCreator.getSslPort(), serverCreator.getWebsocketSslPort());
+			log.info("MQTT Broker is start isSslAuth:{} is up and running. mqPort: {},the cacheType:{}", "[" + serverCreator.isSslAuth() + "]", serverCreator.getSslPort(), serverCreator.getCacheType());
 		}catch (Exception e){
-			log.error("eror=>",e);
+			log.error("error=>",e);
 		}
 	}
 
-
-
-	//@PreDestroy
 	public void stop() {
-		//log.info("Shutdown {} MQTT Broker ...", "[" + brokerProperties.getId() + "]");
 		bossGroup.shutdownGracefully();
 		bossGroup = null;
 		workerGroup.shutdownGracefully();
@@ -193,7 +185,7 @@ public class MqttBrokerServer {
 		channel = sb.bind(serverCreator.getSslPort()).sync().channel();
 	}
 
-	void websocketServer() throws Exception {
+	void websocketServer(SSLEngine sslEngine) throws Exception {
 		ServerBootstrap sb = new ServerBootstrap();
 		sb.group(bossGroup, workerGroup)
 			.channel(serverCreator.isUseEpoll() ? EpollServerSocketChannel.class : NioServerSocketChannel.class)
@@ -206,10 +198,9 @@ public class MqttBrokerServer {
 					// Netty提供的心跳检测
 					channelPipeline.addFirst("idle", new IdleStateHandler(0, 0, serverCreator.getKeepAlive()));
 					// Netty提供的SSL处理
-					SSLEngine sslEngine = sslContext.newEngine(socketChannel.alloc());
-					sslEngine.setUseClientMode(false);        // 服务端模式
-					sslEngine.setNeedClientAuth(false);        // 不需要验证客户端
-					channelPipeline.addLast("ssl", new SslHandler(sslEngine));
+					if(sslEngine!=null) {
+						channelPipeline.addLast("ssl", new SslHandler(sslEngine));// ssl
+					}
 					// 将请求和应答消息编码或解码为HTTP消息
 					channelPipeline.addLast("http-codec", new HttpServerCodec());
 					// 将HTTP消息的多个部分合成一条完整的HTTP消息

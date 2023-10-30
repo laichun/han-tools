@@ -1,5 +1,5 @@
 /**
- * 
+ *  modify by hanson 2023-10
  */
 
 package com.todostudy.iot.mqtt.server.protocol;
@@ -62,7 +62,6 @@ public class Publish {
 					.setMqttQoS(msg.fixedHeader().qosLevel().value()).setMessageBytes(messageBytes)
 					.setDup(false).setRetain(false);
 			//todo:internalCommunication.internalSend(internalMessage);
-			//这里就发不出去，发订阅的消息
 			this.sendPublishMessage(msg.variableHeader().topicName(), msg.fixedHeader().qosLevel(), messageBytes, false, false);
 		}
 		// QoS=1

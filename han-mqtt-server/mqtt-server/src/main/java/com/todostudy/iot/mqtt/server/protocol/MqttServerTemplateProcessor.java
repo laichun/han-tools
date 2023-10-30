@@ -28,49 +28,55 @@ public class MqttServerTemplateProcessor {
 
     public ChannelFuture sendMsg(String clientId, String topic, MqttQoS qos, byte[] message) {
         SessionStore sessionStore = sessionStoreService.get(clientId);
-        Channel channel = sessionStore.getChannel();
-        MqttPublishMessage pubMessage = (MqttPublishMessage) MqttMessageFactory.newMessage(
-                new MqttFixedHeader(MqttMessageType.PUBLISH,
-                        false,
-                        qos,
-                        false,
-                        0),
-                new MqttPublishVariableHeader(topic, 0),
-                Unpooled.buffer().writeBytes(message));
-        // 超过高水位，则采取同步模式
-        if (channel.isWritable()) {
-            return channel.writeAndFlush(pubMessage);
+        if(sessionStore!=null) {
+            Channel channel = sessionStore.getChannel();
+            MqttPublishMessage pubMessage = (MqttPublishMessage) MqttMessageFactory.newMessage(
+                    new MqttFixedHeader(MqttMessageType.PUBLISH,
+                            false,
+                            qos,
+                            false,
+                            0),
+                    new MqttPublishVariableHeader(topic, 0),
+                    Unpooled.buffer().writeBytes(message));
+            // 超过高水位，则采取同步模式
+            if (channel.isWritable()) {
+                return channel.writeAndFlush(pubMessage);
+            }
+            try {
+                return channel.writeAndFlush(pubMessage).sync();
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
         }
-        try {
-            return channel.writeAndFlush(pubMessage).sync();
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-
+        //throw new RuntimeException("发送失败/客户端未上线或者不存在");// 可以不提示直接 return;业务端解决
+        return null;
     }
 
 
     public ChannelFuture sendMsgRetain(String clientId, String topic, MqttQoS qos, byte[] message) {
         SessionStore sessionStore = sessionStoreService.get(clientId);
-        Channel channel = sessionStore.getChannel();
-        MqttPublishMessage pubMessage = (MqttPublishMessage) MqttMessageFactory.newMessage(
-                new MqttFixedHeader(MqttMessageType.PUBLISH,
-                        false,
-                        qos,
-                        true,
-                        0),
-                new MqttPublishVariableHeader(topic, 0),
-                Unpooled.buffer().writeBytes(message));
-        // 超过高水位，则采取同步模式
-        if (channel.isWritable()) {
-            return channel.writeAndFlush(pubMessage);
+        if(sessionStore!=null) {
+            Channel channel = sessionStore.getChannel();
+            MqttPublishMessage pubMessage = (MqttPublishMessage) MqttMessageFactory.newMessage(
+                    new MqttFixedHeader(MqttMessageType.PUBLISH,
+                            false,
+                            qos,
+                            true,
+                            0),
+                    new MqttPublishVariableHeader(topic, 0),
+                    Unpooled.buffer().writeBytes(message));
+            // 超过高水位，则采取同步模式
+            if (channel.isWritable()) {
+                return channel.writeAndFlush(pubMessage);
+            }
+            try {
+                return channel.writeAndFlush(pubMessage).sync();
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
         }
-        try {
-            return channel.writeAndFlush(pubMessage).sync();
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-
+        //throw new RuntimeException("发送失败/客户端未上线或者不存在");// 可以不提示直接 return;业务端解决
+        return null;
     }
 
     public void sendAll(String topic, MqttQoS qos, byte[] message) {
@@ -79,7 +85,7 @@ public class MqttServerTemplateProcessor {
             public void run() {
                 List<SubscribeStore> subscribeStores = subscribeStoreService.search(topic);
                 subscribeStores.forEach(item->{
-                    sendMsgRetain(item.getClientId(),  topic,  qos, message);
+                    sendMsg(item.getClientId(),  topic,  qos, message);
                 });
             }
         });

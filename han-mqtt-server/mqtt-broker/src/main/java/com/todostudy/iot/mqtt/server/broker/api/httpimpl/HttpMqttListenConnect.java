@@ -21,7 +21,7 @@ public class HttpMqttListenConnect implements IMqttListenConnect {
             // http 接口
             Assert.notNull(hanMqttBrokerProperties.getHttpApi().getSendState(),"sendState is null");
             try {
-                Tools.httpBuilder().post(hanMqttBrokerProperties.getHttpApi().getSendState(), new JSONStringer().object().key(Tools.clientId).value(clientId)
+                Tools.httpBuilder().postJson(hanMqttBrokerProperties.getHttpApi().getSendState(), new JSONStringer().object().key(Tools.clientId).value(clientId)
                         .key(Tools.username).value(username).key("state").value("online").endObject().toString());
             } catch (JSONException e) {
                 throw new RuntimeException(e);
@@ -34,7 +34,7 @@ public class HttpMqttListenConnect implements IMqttListenConnect {
             // http 接口
             Assert.notNull(hanMqttBrokerProperties.getHttpApi().getSendState(),"sendState is null");
             try {
-                Tools.httpBuilder().post(hanMqttBrokerProperties.getHttpApi().getSendState(), new JSONStringer().object().key(Tools.clientId).value(clientId)
+                Tools.httpBuilder().postJson(hanMqttBrokerProperties.getHttpApi().getSendState(), new JSONStringer().object().key(Tools.clientId).value(clientId)
                         .key(Tools.username).value(username).key("state").value("offline").endObject().toString());
             } catch (JSONException e) {
                 throw new RuntimeException(e);

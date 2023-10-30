@@ -1,5 +1,6 @@
 /**
- * 
+ * Copyright (c) 2018, Mr.Wang (recallcode@aliyun.com) All rights reserved.
+ * modify by hanson 2023-10
  */
 
 package com.todostudy.iot.mqtt.server.handler;
@@ -18,6 +19,7 @@ import io.netty.handler.timeout.IdleStateEvent;
 import io.netty.util.AttributeKey;
 import io.netty.util.concurrent.Future;
 import io.netty.util.concurrent.GenericFutureListener;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
@@ -27,10 +29,9 @@ import java.io.IOException;
 /**
  * MQTT消息处理 不能使用单例
  */
+@Slf4j
 @ChannelHandler.Sharable
 public class MqttBrokerHandler extends ChannelInboundHandlerAdapter implements GenericFutureListener<Future<? super Void>> {
-
-	private static final Logger logger = LoggerFactory.getLogger(MqttBrokerHandler.class);
 
 	private MqttServerProcessor protocolProcess;
 
@@ -46,7 +47,7 @@ public class MqttBrokerHandler extends ChannelInboundHandlerAdapter implements G
 	@Override
 	public void channelUnregistered(ChannelHandlerContext ctx) throws Exception {
 		super.channelUnregistered(ctx);
-		//logger.debug("------disconnection------channelUnregistered");
+		//log.debug("------disconnection------channelUnregistered");
 		if(ctx.channel()!=null) {
 			protocolProcess.disConnect().processDisConnect(ctx.channel(), null);
 		}
@@ -136,6 +137,6 @@ public class MqttBrokerHandler extends ChannelInboundHandlerAdapter implements G
 
 	@Override
 	public void operationComplete(Future<? super Void> future) throws Exception {
-		logger.debug("=============[{}] channel closed", "");
+		log.debug("=============[{}] channel closed", "");
 	}
 }

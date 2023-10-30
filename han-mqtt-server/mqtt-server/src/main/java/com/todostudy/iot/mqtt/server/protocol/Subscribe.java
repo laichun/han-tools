@@ -1,7 +1,7 @@
 /**
- * 
+ * Copyright (c) 2018, Mr.Wang (recallcode@aliyun.com) All rights reserved.
+ * modify by hanson 2023-10
  */
-
 package com.todostudy.iot.mqtt.server.protocol;
 
 import cn.hutool.core.util.StrUtil;
@@ -24,6 +24,7 @@ import java.util.List;
 
 /**
  * SUBSCRIBE连接处理
+ *  modify by hanson 2023-10
  */
 public class Subscribe {
 

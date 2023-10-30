@@ -1,11 +1,8 @@
-/**
- * 
- */
-
 package com.todostudy.iot.mqtt.server.api;
 
 /**
  * 用户和密码认证服务接口
+ * @author hanson
  */
 public interface  IAuthService{
 

@@ -70,7 +70,7 @@ public class MessageIdRedisService implements IMessageIdService {
 				return nextMsgId;
 			}else{
 				Thread.sleep(2000);
-				log.info("getMessageId is lock waiting...");
+				log.warn("getMessageId is lock waiting...");
 				return getNextMessageId();
 			}
 		} catch (InterruptedException e) {

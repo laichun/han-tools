@@ -106,3 +106,46 @@ public class ListenMessageServer implements IMqttListenMessage {
 - 用户可以制作自己的证书, 但存储位置和文件名必须使用上述描述的位置及文件名
 
 #### 生成环境部署
+
+#### 测试和补充
+
+qos0
+对于qos1而言，对于client而言，有且仅发一次publish包，对于broker而言，有且仅发一次publish，简而言之，就是仅发一次包，是否收到完全不管，适合那些不是很重要的数据。
+QoS 0 是最低的 QoS等级。QoS 0 消息即发即弃，不需要等待确认，不需要存储和重传，因此对于接收方来说，永远都不需要担心收到重复的消息。
+
+
+QoS=1通讯时的注意事项
+qos1
+对于qos0而言，这个交互就是多了一次ack的作用，但是会有个问题，尽管我们可以通过确认来保证一定收到客户端或服务器的message，
+但是我们却不能保证message仅有一次，也就是当client没收到service的puback或者service没有收到client的puback，那么就会一直发送publisher
+qos1流程：（publisher -> broker）
+1.publisher store msg -> publish ->broker （传递message）
+2.broker -> puback -> publisher delete msg （确认传递成功）
+
+测试注意：
+如想在MQTT通讯中实现服务质量等级为1级（QoS=1），我们要分别对消息的发布端课接收端进行相应的设置。以下列表中的内容是具体需要采取的措施。
+接收端连接服务端时cleanSession设置为false
+接收端订阅主题时QoS=1
+发布端发布消息时QoS=1
+
+
+
+QoS=2通讯时的注意事项
+如想在MQTT通讯中实现服务质量等级为2级（QoS=2），我们要分别对消息的发布端和接收端进行相应的设置。以下列表中的内容是具体需要采取的措施。
+
+qos2流程：（publisher -> broker）
+publisher store msg -> publish ->broker -> broker store msgID（传递message）
+broker -> puberc （确认传递成功）
+publisher -> pubrel -> broker delete msgID （告诉broker删除msgID）
+broker -> pubcomp -> publisher delete msg （告诉publisher删除msg）
+
+测试注意：
+接收端连接服务端时cleanSession设置为false
+接收端订阅主题时QoS=2
+发布端发布消息时QoS=2
+
+QoS=2 会比较慢。QoS 用 0或者1 适用大多数场景。
+
+Retain 消息 自行百度
+
+

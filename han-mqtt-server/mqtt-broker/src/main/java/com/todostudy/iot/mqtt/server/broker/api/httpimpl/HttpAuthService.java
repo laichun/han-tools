@@ -33,7 +33,7 @@ public class HttpAuthService implements IAuthService {
 			// http 接口
 			Assert.notNull(hanMqttBrokerProperties.getHttpApi().getSendAuth(),"sendAuth is null");
 			try {
-				String res = Tools.httpBuilder().post(hanMqttBrokerProperties.getHttpApi().getSendAuth(), new JSONStringer().object().key(Tools.username).value(username)
+				String res = Tools.httpBuilder().postJson(hanMqttBrokerProperties.getHttpApi().getSendAuth(), new JSONStringer().object().key(Tools.username).value(username)
 						.key("password").value(password).key(Tools.clientId).value(clientId).endObject().toString());
 				log.info("res--{}",res);
 				return Boolean.valueOf(res);

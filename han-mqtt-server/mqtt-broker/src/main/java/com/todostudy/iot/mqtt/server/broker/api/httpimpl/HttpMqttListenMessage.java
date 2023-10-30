@@ -24,7 +24,7 @@ public class HttpMqttListenMessage implements IMqttListenMessage  {
             // http 接口
             Assert.notNull(hanMqttBrokerProperties.getHttpApi().getSendMsg(),"sendMsg is null");
             try {
-                Tools.httpBuilder().post(hanMqttBrokerProperties.getHttpApi().getSendMsg(), new JSONStringer().object().key(Tools.clientId).value(clientId)
+                Tools.httpBuilder().postJson(hanMqttBrokerProperties.getHttpApi().getSendMsg(), new JSONStringer().object().key(Tools.clientId).value(clientId)
                         .key("topic").value(topic).key("qos").value(qos).key("message").value(new String(message)).endObject().toString());
             } catch (JSONException e) {
                 throw new RuntimeException(e);

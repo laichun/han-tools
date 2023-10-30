@@ -7,14 +7,14 @@
     <groupId>com.todostudy</groupId>
     <artifactId>han-tools</artifactId>
 
-    <version>1.1.8</version>
+    <version>1.1.9</version>
     <packaging>pom</packaging>
     <name>han-tools</name>
     <url>https://github.com/laichun/han-tools</url>
     <description>han-tools 开发工具类</description>
 
     <properties>
-        <hanversion>1.1.8</hanversion>
+        <hanversion>1.1.9</hanversion>
         <spring-boot.version>2.6.6</spring-boot.version>
         <hutool.version>4.1.6</hutool.version>
         <swagger.version>3.0.0</swagger.version>

@@ -1,5 +1,7 @@
 package com.todostudy.iot.mqtt.server.common;
 
+import cn.hutool.core.lang.Singleton;
+
 import java.net.ProxySelector;
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -15,6 +17,9 @@ import java.util.concurrent.Executors;
  * @author  hanson
  */
 public class Tools {
+
+    private static Tools toolsInstance;//单例
+
     public static final String clientId="clientId";
     public static final String username="username";
     public static final String topic="topic";
@@ -26,7 +31,7 @@ public class Tools {
     private volatile HttpClient httpClient = null;
     private static ExecutorService godoService;
 
-    private Tools(){
+    public Tools httpPostBuilder(){
         if (httpClient == null){
             synchronized (lock){
                 if (httpClient == null){
@@ -40,14 +45,15 @@ public class Tools {
                 }
             }
         }
-
+        return this;
     }
+
     /**
      * get请求
      * @param url 地址
      * @return
      */
-    public String post(String url,String data){
+    public String postJson(String url,String data){
         String body = "";
         try {
             HttpRequest request = HttpRequest.newBuilder()
@@ -67,12 +73,18 @@ public class Tools {
         return body;
     }
 
+    public static Tools getInstance() {
+        if (toolsInstance == null) {
+            toolsInstance = new Tools();
+        }
+        return toolsInstance;
+    }
     /**
      * 创建 HttpUtil
      * @return
      */
     public static Tools httpBuilder(){
-        return new Tools();
+        return getInstance().httpPostBuilder();
     }
 
     public static ExecutorService getGodo(){

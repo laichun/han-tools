@@ -113,18 +113,14 @@ public class MqttServerCreator {
 
     public MqttBrokerServer build(SessionStoreService sessionStoreService) {
         //内部bean的初始化
+        messageIdService = new MessageIdService();
+        dupPublishMessageStoreService=new DupPublishMessageMemoryStoreService(messageIdService);
+        dupPubRelMessageStoreService=new DupPubRelMessageMemoryStoreService(messageIdService);
         if(getCacheType().equals(Tools.CACHE_MEMORY)){
-            messageIdService = new MessageIdService();
-            dupPublishMessageStoreService=new DupPublishMessageMemoryStoreService(messageIdService);
-            dupPubRelMessageStoreService=new DupPubRelMessageMemoryStoreService(messageIdService);
             retainMessageStoreService=new RetainMessageMemoryStoreService();
             subscribeStoreService=new SubscribeStoreMemoryService();
 
         }else if(getCacheType().equals(Tools.CACHE_REDIS)){
-            redisServices=new RedisServices(redisTemplate,retainMsgTime);
-            messageIdService = new MessageIdRedisService(redisServices);
-            dupPublishMessageStoreService=new DupPublishMessageRedisStoreService(messageIdService, redisServices);
-            dupPubRelMessageStoreService=new DupPubRelMessageRedisStoreService(redisServices);
             retainMessageStoreService=new RetainMessageRedisStoreService(redisServices);
             subscribeStoreService=new SubscribeRedisStoreService(redisServices);
         }

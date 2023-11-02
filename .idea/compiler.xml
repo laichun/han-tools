@@ -9,8 +9,6 @@
         <outputRelativeToContentRoot value="true" />
         <module name="han-mqtt-service-spring-stater" />
         <module name="mqtt-broker" />
-        <module name="mqtt-example-client" />
-        <module name="mqtt-example" />
         <module name="mqtt-common" />
         <module name="mqtt-server" />
         <module name="han-common-tools" />
@@ -18,7 +16,6 @@
     </annotationProcessing>
     <bytecodeTargetLevel target="11">
       <module name="han-mqtt-server" target="11" />
-      <module name="mqtt-broker" target="11" />
       <module name="mqtt-example" target="11" />
       <module name="mqtt-example-client" target="11" />
     </bytecodeTargetLevel>

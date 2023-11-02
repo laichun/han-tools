@@ -11,9 +11,6 @@ import io.netty.channel.Channel;
 import io.netty.handler.codec.mqtt.MqttMessageIdVariableHeader;
 import io.netty.util.AttributeKey;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /**
  * PUBACK连接处理
  */
@@ -33,7 +30,6 @@ public class PubAck {
 		int messageId = variableHeader.messageId();
 		log.debug("PUBACK - clientId: {}, messageId: {}", (String) channel.attr(AttributeKey.valueOf(Tools.clientId)).get(), messageId);
 		dupPublishMessageStoreService.remove((String) channel.attr(AttributeKey.valueOf(Tools.clientId)).get(), messageId);
-		messageIdService.releaseMessageId(messageId);
 	}
 
 }

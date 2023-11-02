@@ -10,15 +10,13 @@ import com.todostudy.iot.mqtt.server.common.message.IMessageIdService;
 import io.netty.channel.Channel;
 import io.netty.handler.codec.mqtt.MqttMessageIdVariableHeader;
 import io.netty.util.AttributeKey;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * PUBCOMP连接处理
  */
+@Slf4j
 public class PubComp {
-
-	private static final Logger LOGGER = LoggerFactory.getLogger(PubComp.class);
 
 	private IMessageIdService messageIdService;
 
@@ -31,8 +29,7 @@ public class PubComp {
 
 	public void processPubComp(Channel channel, MqttMessageIdVariableHeader variableHeader) {
 		int messageId = variableHeader.messageId();
-		LOGGER.debug("PUBCOMP - clientId: {}, messageId: {}", (String) channel.attr(AttributeKey.valueOf(Tools.clientId)).get(), messageId);
+		log.debug("PUBCOMP - clientId: {}, messageId: {}", (String) channel.attr(AttributeKey.valueOf(Tools.clientId)).get(), messageId);
 		dupPubRelMessageStoreService.remove((String) channel.attr(AttributeKey.valueOf(Tools.clientId)).get(), variableHeader.messageId());
-		messageIdService.releaseMessageId(messageId);
 	}
 }

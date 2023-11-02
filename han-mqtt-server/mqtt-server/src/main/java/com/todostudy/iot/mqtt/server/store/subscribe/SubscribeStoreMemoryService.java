@@ -71,8 +71,6 @@ public class SubscribeStoreMemoryService implements ISubscribeStoreService {
 	@Override
 	public void removeForClient(String clientId) {
 
-
-
 		subscribeNotWildcardCache.forEach((key,val) -> {
 			ConcurrentHashMap<String, SubscribeStore> map = val;
 			if (map.containsKey(clientId)) {

@@ -55,9 +55,6 @@ public class DupPubRelMessageMemoryStoreService implements IDupPubRelMessageStor
 	public void removeByClient(String clientId) {
 		if (dupPubRelMessageCache.containsKey(clientId)) {
 			ConcurrentHashMap<Integer, DupPubRelMessageStore> map = dupPubRelMessageCache.get(clientId);
-			map.forEach((messageId, dupPubRelMessageStore) -> {
-				messageIdService.releaseMessageId(messageId);
-			});
 			map.clear();
 			dupPubRelMessageCache.remove(clientId);
 		}

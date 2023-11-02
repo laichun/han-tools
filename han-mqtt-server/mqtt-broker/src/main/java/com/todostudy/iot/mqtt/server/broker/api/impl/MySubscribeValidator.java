@@ -19,6 +19,6 @@ public class MySubscribeValidator  implements ICheckSubscribeValidator {
             if (StrUtil.startWith(topicFilter, '#') || StrUtil.startWith(topicFilter, '+') || StrUtil.endWith(topicFilter, '/') || !StrUtil.contains(topicFilter, '/'))
                 return false;
         }
-        return true;
+        return false;
     }
 }

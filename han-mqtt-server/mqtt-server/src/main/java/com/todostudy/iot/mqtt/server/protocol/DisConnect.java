@@ -15,17 +15,15 @@ import com.todostudy.iot.mqtt.server.common.subscribe.ISubscribeStoreService;
 import io.netty.channel.Channel;
 import io.netty.handler.codec.mqtt.MqttMessage;
 import io.netty.util.AttributeKey;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.StringUtils;
 
 
 /**
  * DISCONNECT连接处理
  */
+@Slf4j
 public class DisConnect {
-
-	private static final Logger LOGGER = LoggerFactory.getLogger(DisConnect.class);
 
 	private ISessionStoreService sessionStoreService;
 
@@ -56,7 +54,7 @@ public class DisConnect {
 					dupPublishMessageStoreService.removeByClient(clientId);
 					dupPubRelMessageStoreService.removeByClient(clientId);
 				}
-				LOGGER.debug("DISCONNECT - clientId: {}, cleanSession: {}", clientId, sessionStore.isCleanSession());
+				log.debug("DISCONNECT - clientId: {}, cleanSession: {}", clientId, sessionStore.isCleanSession());
 				String userName = sessionStore.getUserName();
 				sessionStoreService.remove(clientId);
 				channel.close();

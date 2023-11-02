@@ -4,6 +4,7 @@ import io.netty.buffer.ByteBufAllocator;
 import io.netty.handler.ssl.SslContext;
 import io.netty.handler.ssl.SslContextBuilder;
 import io.netty.handler.ssl.SslProvider;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.SSLContext;
@@ -16,6 +17,7 @@ import java.security.KeyStore;
 /**
  * 包括单向认证和双向认证
  */
+@Slf4j
 public class SSLContextFactory {
 
     private static final String PROTOCOL = "TLS";
@@ -82,8 +84,7 @@ public class SSLContextFactory {
             SERVER_CONTEXT.init(kmf.getKeyManagers(), null, null);
 
         } catch (Exception e) {
-            throw new Error("Failed to initialize the server-side SSLContext",
-                    e);
+            throw new Error("Failed to initialize the server-side SSLContext", e);
         } finally {
             if (in != null) {
                 try {
@@ -121,7 +122,7 @@ public class SSLContextFactory {
                     .sslProvider(SslProvider.OPENSSL).build();
             return openSslContext;
         } catch (Exception e) {
-            e.printStackTrace();
+           log.error("error:" , e);
         }
 
         return null;
@@ -158,13 +159,10 @@ public class SSLContextFactory {
 
     public static SslContext getOpenSslClientContext(InputStream pkInputStream,
                                                      String passwd) {
-
         if (openSslClientContext != null) {
             return openSslClientContext;
         }
-
         try {
-
             // 信任库
             TrustManagerFactory tf = null;
             // 密钥库KeyStore
@@ -180,7 +178,7 @@ public class SSLContextFactory {
 
             return openSslClientContext;
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("error:" , e);
         }
         return null;
     }
@@ -243,7 +241,6 @@ public class SSLContextFactory {
             return openSslContext;
 
         try {
-
             // 密钥管理器
             KeyManagerFactory kmf = null;
                 // 密钥库KeyStore
@@ -269,7 +266,7 @@ public class SSLContextFactory {
                     .sslProvider(SslProvider.OPENSSL).build();
             return openSslContext;
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("error:" , e);
         }
         return null;
 
@@ -340,7 +337,7 @@ public class SSLContextFactory {
 
             return openSslClientContext;
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("error:" , e);
         }
         return null;
     }

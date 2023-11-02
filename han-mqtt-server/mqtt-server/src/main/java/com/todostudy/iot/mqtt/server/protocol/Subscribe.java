@@ -16,6 +16,7 @@ import io.netty.buffer.Unpooled;
 import io.netty.channel.Channel;
 import io.netty.handler.codec.mqtt.*;
 import io.netty.util.AttributeKey;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,9 +27,8 @@ import java.util.List;
  * SUBSCRIBE连接处理
  *  modify by hanson 2023-10
  */
+@Slf4j
 public class Subscribe {
-
-	private static final Logger LOGGER = LoggerFactory.getLogger(Subscribe.class);
 
 	private ISubscribeStoreService subscribeStoreService;
 
@@ -48,7 +48,7 @@ public class Subscribe {
 		List<MqttTopicSubscription> topicSubscriptions = msg.payload().topicSubscriptions();
 
 		String clientId = (String) channel.attr(AttributeKey.valueOf(Tools.clientId)).get();
-		if (iCheckSubscribeValidator.subscribeValidator(clientId, topicSubscriptions)) {//TODO:
+		if (iCheckSubscribeValidator.subscribeValidator(clientId, topicSubscriptions)) { //TODO: 如果订阅不正确应该disconnect 连接
 			List<Integer> mqttQoSList = new ArrayList<Integer>();
 			topicSubscriptions.forEach(topicSubscription -> {
 				String topicFilter = topicSubscription.topicName();
@@ -56,7 +56,7 @@ public class Subscribe {
 				SubscribeStore subscribeStore = new SubscribeStore(clientId, topicFilter, mqttQoS.value());
 				subscribeStoreService.put(topicFilter, subscribeStore);
 				mqttQoSList.add(mqttQoS.value());
-				LOGGER.debug("SUBSCRIBE - clientId: {}, topFilter: {}, QoS: {}", clientId, topicFilter, mqttQoS.value());
+				log.debug("SUBSCRIBE - clientId: {}, topFilter: {}, QoS: {}", clientId, topicFilter, mqttQoS.value());
 			});
 			MqttSubAckMessage subAckMessage = (MqttSubAckMessage) MqttMessageFactory.newMessage(
 				new MqttFixedHeader(MqttMessageType.SUBACK, false, MqttQoS.AT_MOST_ONCE, false, 0),
@@ -96,28 +96,29 @@ public class Subscribe {
 	private void sendRetainMessage(Channel channel, String topicFilter, MqttQoS mqttQoS) {
 		List<RetainMessageStore> retainMessageStores = retainMessageStoreService.search(topicFilter);
 		retainMessageStores.forEach(retainMessageStore -> {
+			String clientId = (String) channel.attr(AttributeKey.valueOf(Tools.clientId)).get();
 			MqttQoS respQoS = retainMessageStore.getMqttQoS() > mqttQoS.value() ? mqttQoS : MqttQoS.valueOf(retainMessageStore.getMqttQoS());
 			if (respQoS == MqttQoS.AT_MOST_ONCE) {
 				MqttPublishMessage publishMessage = (MqttPublishMessage) MqttMessageFactory.newMessage(
 					new MqttFixedHeader(MqttMessageType.PUBLISH, false, respQoS, false, 0),
 					new MqttPublishVariableHeader(retainMessageStore.getTopic(), 0), Unpooled.buffer().writeBytes(retainMessageStore.getMessageBytes()));
-				LOGGER.debug("PUBLISH - clientId: {}, topic: {}, Qos: {}", (String) channel.attr(AttributeKey.valueOf(Tools.clientId)).get(), retainMessageStore.getTopic(), respQoS.value());
+				log.debug("PUBLISH - clientId: {}, topic: {}, Qos: {}", (String) clientId, retainMessageStore.getTopic(), respQoS.value());
 				channel.writeAndFlush(publishMessage);
 			}
 			if (respQoS == MqttQoS.AT_LEAST_ONCE) {
-				int messageId = messageIdService.getNextMessageId();
+				int messageId = messageIdService.getMessageId(clientId);
 				MqttPublishMessage publishMessage = (MqttPublishMessage) MqttMessageFactory.newMessage(
 					new MqttFixedHeader(MqttMessageType.PUBLISH, false, respQoS, false, 0),
 					new MqttPublishVariableHeader(retainMessageStore.getTopic(), messageId), Unpooled.buffer().writeBytes(retainMessageStore.getMessageBytes()));
-				LOGGER.debug("PUBLISH - clientId: {}, topic: {}, Qos: {}, messageId: {}", (String) channel.attr(AttributeKey.valueOf(Tools.clientId)).get(), retainMessageStore.getTopic(), respQoS.value(), messageId);
+				log.debug("PUBLISH - clientId: {}, topic: {}, Qos: {}, messageId: {}", clientId, retainMessageStore.getTopic(), respQoS.value(), messageId);
 				channel.writeAndFlush(publishMessage);
 			}
 			if (respQoS == MqttQoS.EXACTLY_ONCE) {
-				int messageId = messageIdService.getNextMessageId();
+				int messageId = messageIdService.getMessageId(clientId);
 				MqttPublishMessage publishMessage = (MqttPublishMessage) MqttMessageFactory.newMessage(
 					new MqttFixedHeader(MqttMessageType.PUBLISH, false, respQoS, false, 0),
 					new MqttPublishVariableHeader(retainMessageStore.getTopic(), messageId), Unpooled.buffer().writeBytes(retainMessageStore.getMessageBytes()));
-				LOGGER.debug("PUBLISH - clientId: {}, topic: {}, Qos: {}, messageId: {}", (String) channel.attr(AttributeKey.valueOf(Tools.clientId)).get(), retainMessageStore.getTopic(), respQoS.value(), messageId);
+				log.debug("PUBLISH - clientId: {}, topic: {}, Qos: {}, messageId: {}", clientId, retainMessageStore.getTopic(), respQoS.value(), messageId);
 				channel.writeAndFlush(publishMessage);
 			}
 		});

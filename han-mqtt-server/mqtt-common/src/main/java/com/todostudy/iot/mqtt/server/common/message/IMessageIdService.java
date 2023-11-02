@@ -12,10 +12,6 @@ public interface IMessageIdService {
 	/**
 	 * 获取报文标识符
 	 */
-	int getNextMessageId();
+	int getMessageId(String clientId);
 
-	/**
-	 * 释放报文标识符
-	 */
-	void releaseMessageId(int messageId);
 }

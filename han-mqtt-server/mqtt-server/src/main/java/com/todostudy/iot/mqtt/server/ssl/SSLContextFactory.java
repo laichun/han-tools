@@ -19,6 +19,8 @@ import java.security.KeyStore;
 public class SSLContextFactory {
 
     private static final String PROTOCOL = "TLS";
+    private static final String JKS = "JKS";
+    private static final String SunX509="SunX509";
 
     private static SSLContext SERVER_CONTEXT;// 服务器安全套接字协议
 
@@ -64,12 +66,12 @@ public class SSLContextFactory {
             // 密钥管理器
             KeyManagerFactory kmf = null;
             // 密钥库KeyStore
-            KeyStore ks = KeyStore.getInstance("JKS");
+            KeyStore ks = KeyStore.getInstance(JKS);
 
             // 加载服务端的KeyStore ；sNetty是生成仓库时设置的密码，用于检查密钥库完整性的密码
             ks.load(pkInputStream, passwd.toCharArray());
 
-            kmf = KeyManagerFactory.getInstance("SunX509");
+            kmf = KeyManagerFactory.getInstance(SunX509);
             // 初始化密钥管理器
             kmf.init(ks, passwd.toCharArray());
 
@@ -106,12 +108,12 @@ public class SSLContextFactory {
             KeyManagerFactory kmf = null;
 
             // 密钥库KeyStore
-            KeyStore ks = KeyStore.getInstance("JKS");
+            KeyStore ks = KeyStore.getInstance(JKS);
             // 加载服务端证书
             // 加载服务端的KeyStore ；sNetty是生成仓库时设置的密码，用于检查密钥库完整性的密码
             ks.load(pkInputStream, passwd.toCharArray());
 
-            kmf = KeyManagerFactory.getInstance("SunX509");
+            kmf = KeyManagerFactory.getInstance(SunX509);
             // 初始化密钥管理器
             kmf.init(ks, passwd.toCharArray());
 
@@ -134,10 +136,10 @@ public class SSLContextFactory {
             // 信任库
             TrustManagerFactory tf = null;
             // 密钥库KeyStore
-            KeyStore tks = KeyStore.getInstance("JKS");
+            KeyStore tks = KeyStore.getInstance(JKS);
             // 加载客户端证书
             tks.load(pkInputStream, passwd.toCharArray());
-            tf = TrustManagerFactory.getInstance("SunX509");
+            tf = TrustManagerFactory.getInstance(SunX509);
             // 初始化信任库
             tf.init(tks);
 
@@ -166,10 +168,10 @@ public class SSLContextFactory {
             // 信任库
             TrustManagerFactory tf = null;
             // 密钥库KeyStore
-            KeyStore tks = KeyStore.getInstance("JKS");
+            KeyStore tks = KeyStore.getInstance(JKS);
             // 加载客户端证书
             tks.load(pkInputStream, passwd.toCharArray());
-            tf = TrustManagerFactory.getInstance("SunX509");
+            tf = TrustManagerFactory.getInstance(SunX509);
             // 初始化信任库
             tf.init(tks);
 
@@ -200,17 +202,17 @@ public class SSLContextFactory {
         try {
             // 密钥管理器
             KeyManagerFactory kmf = null;
-            KeyStore ks = KeyStore.getInstance("JKS");
+            KeyStore ks = KeyStore.getInstance(JKS);
             ks.load(pkInputStream, passwd.toCharArray());
 
-            kmf = KeyManagerFactory.getInstance("SunX509");
+            kmf = KeyManagerFactory.getInstance(SunX509);
             kmf.init(ks, passwd.toCharArray());
 
             // 信任库
             TrustManagerFactory tf = null;
-            KeyStore tks = KeyStore.getInstance("JKS");
+            KeyStore tks = KeyStore.getInstance(JKS);
             tks.load(caInputStream, passwd.toCharArray());
-            tf = TrustManagerFactory.getInstance("SunX509");
+            tf = TrustManagerFactory.getInstance(SunX509);
             tf.init(tks);
 
 
@@ -245,21 +247,21 @@ public class SSLContextFactory {
             // 密钥管理器
             KeyManagerFactory kmf = null;
                 // 密钥库KeyStore
-                KeyStore ks = KeyStore.getInstance("JKS");
+                KeyStore ks = KeyStore.getInstance(JKS);
                 // 加载服务端证书
                 // 加载服务端的KeyStore ；sNetty是生成仓库时设置的密码，用于检查密钥库完整性的密码
                 ks.load(pkInputStream, passwd.toCharArray());
 
-                kmf = KeyManagerFactory.getInstance("SunX509");
+                kmf = KeyManagerFactory.getInstance(SunX509);
                 // 初始化密钥管理器
                 kmf.init(ks, passwd.toCharArray());
 
 
             // 信任库
             TrustManagerFactory tf = null;
-                KeyStore tks = KeyStore.getInstance("JKS");
+                KeyStore tks = KeyStore.getInstance(JKS);
                 tks.load(caInputStream, passwd.toCharArray());
-                tf = TrustManagerFactory.getInstance("SunX509");
+                tf = TrustManagerFactory.getInstance(SunX509);
                 tf.init(tks);
 
 
@@ -282,16 +284,16 @@ public class SSLContextFactory {
         try {
             KeyManagerFactory kmf = null;
 
-                KeyStore ks = KeyStore.getInstance("JKS");
+                KeyStore ks = KeyStore.getInstance(JKS);
                 ks.load(pkInputStream, passwd.toCharArray());
-                kmf = KeyManagerFactory.getInstance("SunX509");
+                kmf = KeyManagerFactory.getInstance(SunX509);
                 kmf.init(ks, passwd.toCharArray());
 
             TrustManagerFactory tf = null;
-                KeyStore tks = KeyStore.getInstance("JKS");
+                KeyStore tks = KeyStore.getInstance(JKS);
 
                 tks.load(caInputStream, passwd.toCharArray());
-                tf = TrustManagerFactory.getInstance("SunX509");
+                tf = TrustManagerFactory.getInstance(SunX509);
                 tf.init(tks);
 
             CLIENT_CONTEXT = SSLContext.getInstance(PROTOCOL);
@@ -317,19 +319,19 @@ public class SSLContextFactory {
             // 密钥管理器
             KeyManagerFactory kmf = null;
                 // 密钥库KeyStore
-                KeyStore ks = KeyStore.getInstance("JKS");
+                KeyStore ks = KeyStore.getInstance(JKS);
                 // 加载服务端证书
                 // 加载服务端的KeyStore ；sNetty是生成仓库时设置的密码，用于检查密钥库完整性的密码
                 ks.load(pkInputStream, passwd.toCharArray());
-                kmf = KeyManagerFactory.getInstance("SunX509");
+                kmf = KeyManagerFactory.getInstance(SunX509);
                 // 初始化密钥管理器
                 kmf.init(ks, passwd.toCharArray());
 
             // 信任库
             TrustManagerFactory tf = null;
-                KeyStore tks = KeyStore.getInstance("JKS");
+                KeyStore tks = KeyStore.getInstance(JKS);
                 tks.load(caInputStream, passwd.toCharArray());
-                tf = TrustManagerFactory.getInstance("SunX509");
+                tf = TrustManagerFactory.getInstance(SunX509);
                 tf.init(tks);
 
             openSslClientContext = SslContextBuilder.forClient()

@@ -15,6 +15,8 @@ import javax.net.ssl.TrustManagerFactory;
 import java.security.KeyStore;
 
 public class NettyMqttClient {
+    private static final String JKS = "JKS";
+    private static final String SunX509="SunX509";
 
     public static void main(String[] args) throws Exception {
         new NettyMqttClient().connect("127.0.0.1",1883);
@@ -44,15 +46,15 @@ public class NettyMqttClient {
     }
     public static SslContext  getSslContext() throws Exception {
         //同理
-        KeyStore keyStore = KeyStore.getInstance("JKS");
+        KeyStore keyStore = KeyStore.getInstance(JKS);
         //客户端证书的流 和 客户端证书密码
         keyStore.load(ResourceUtil.getResourceAsStream("keystore/cChat.jks"), "123456".toCharArray());
         //
-        TrustManagerFactory tf = TrustManagerFactory.getInstance("SunX509");
+        TrustManagerFactory tf = TrustManagerFactory.getInstance(SunX509);
         //初始化
         tf.init(keyStore);
 
-        KeyManagerFactory keyManagerFactory = KeyManagerFactory.getInstance("SunX509");
+        KeyManagerFactory keyManagerFactory = KeyManagerFactory.getInstance(SunX509);
         keyManagerFactory.init(keyStore, "123456".toCharArray());
 
         SslContext sslContext = SslContextBuilder.forClient()

@@ -26,7 +26,6 @@ public class TsClientChannelInitializer extends ChannelInitializer<SocketChannel
                 "TLSv1.2" });
 
         ch.pipeline().addLast("ssl", new SslHandler(sslEngine));// 不要ssl就去掉
-        //ch.pipeline().addLast(sslContext.newHandler(ch.alloc()));
         ch.pipeline().addLast(new LineBasedFrameDecoder(1024));
 
         ch.pipeline().addLast("decoder", new MqttDecoder());

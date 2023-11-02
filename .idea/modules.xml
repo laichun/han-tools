@@ -2,6 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/han-mqtt-server/mqtt-broker/mqtt-broker.iml" filepath="$PROJECT_DIR$/han-mqtt-server/mqtt-broker/mqtt-broker.iml" />
+      <module fileurl="file://$PROJECT_DIR$/han-mqtt-server/mqtt-example/mqtt-example.iml" filepath="$PROJECT_DIR$/han-mqtt-server/mqtt-example/mqtt-example.iml" />
       <module fileurl="file://$PROJECT_DIR$/han-mqtt-server/mqtt-example-client/mqtt-example-client.iml" filepath="$PROJECT_DIR$/han-mqtt-server/mqtt-example-client/mqtt-example-client.iml" />
     </modules>
   </component>

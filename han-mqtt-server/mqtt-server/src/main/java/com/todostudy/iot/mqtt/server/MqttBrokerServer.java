@@ -111,8 +111,10 @@ public class MqttBrokerServer {
 		workerGroup = null;
 		channel.closeFuture().syncUninterruptibly();
 		channel = null;
-		websocketChannel.closeFuture().syncUninterruptibly();
-		websocketChannel = null;
+		if (serverCreator.isWsEnable()) {
+			websocketChannel.closeFuture().syncUninterruptibly();
+			websocketChannel = null;
+		}
 
 	}
 

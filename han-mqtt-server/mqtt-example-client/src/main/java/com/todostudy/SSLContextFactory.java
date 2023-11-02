@@ -18,6 +18,9 @@ public class SSLContextFactory {
 
     private static final String PROTOCOL = "TLS";
 
+    private static final String JKS = "JKS";
+    private static final String SunX509="SunX509";
+
     private static SSLContext SERVER_CONTEXT;// 服务器安全套接字协议
 
     private static SslContext openSslContext;
@@ -36,13 +39,13 @@ public class SSLContextFactory {
             KeyManagerFactory kmf = null;
             if (pkPath != null) {
                 // 密钥库KeyStore
-                KeyStore ks = KeyStore.getInstance("JKS");
+                KeyStore ks = KeyStore.getInstance(JKS);
                 // 加载服务端证书
                 in = new FileInputStream(pkPath);
                 // 加载服务端的KeyStore ；sNetty是生成仓库时设置的密码，用于检查密钥库完整性的密码
                 ks.load(in, passwd.toCharArray());
 
-                kmf = KeyManagerFactory.getInstance("SunX509");
+                kmf = KeyManagerFactory.getInstance(SunX509);
                 // 初始化密钥管理器
                 kmf.init(ks, passwd.toCharArray());
             }
@@ -81,13 +84,13 @@ public class SSLContextFactory {
             KeyManagerFactory kmf = null;
             if (pkPath != null) {
                 // 密钥库KeyStore
-                KeyStore ks = KeyStore.getInstance("JKS");
+                KeyStore ks = KeyStore.getInstance(JKS);
                 // 加载服务端证书
                 in = new FileInputStream(pkPath);
                 // 加载服务端的KeyStore ；sNetty是生成仓库时设置的密码，用于检查密钥库完整性的密码
                 ks.load(in, passwd.toCharArray());
 
-                kmf = KeyManagerFactory.getInstance("SunX509");
+                kmf = KeyManagerFactory.getInstance(SunX509);
                 // 初始化密钥管理器
                 kmf.init(ks, passwd.toCharArray());
             }
@@ -122,11 +125,11 @@ public class SSLContextFactory {
             TrustManagerFactory tf = null;
             if (pkPath != null) {
                 // 密钥库KeyStore
-                KeyStore tks = KeyStore.getInstance("JKS");
+                KeyStore tks = KeyStore.getInstance(JKS);
                 // 加载客户端证书
                 tIN = new FileInputStream(pkPath);
                 tks.load(tIN, passwd.toCharArray());
-                tf = TrustManagerFactory.getInstance("SunX509");
+                tf = TrustManagerFactory.getInstance(SunX509);
                 // 初始化信任库
                 tf.init(tks);
             }
@@ -165,11 +168,11 @@ public class SSLContextFactory {
             TrustManagerFactory tf = null;
             if (pkPath != null) {
                 // 密钥库KeyStore
-                KeyStore tks = KeyStore.getInstance("JKS");
+                KeyStore tks = KeyStore.getInstance(JKS);
                 // 加载客户端证书
                 tIN = new FileInputStream(pkPath);
                 tks.load(tIN, passwd.toCharArray());
-                tf = TrustManagerFactory.getInstance("SunX509");
+                tf = TrustManagerFactory.getInstance(SunX509);
                 // 初始化信任库
                 tf.init(tks);
             }
@@ -217,20 +220,20 @@ public class SSLContextFactory {
             // 密钥管理器
             KeyManagerFactory kmf = null;
             if (pkPath != null) {
-                KeyStore ks = KeyStore.getInstance("JKS");
+                KeyStore ks = KeyStore.getInstance(JKS);
                 in = new FileInputStream(pkPath);
                 ks.load(in, passwd.toCharArray());
 
-                kmf = KeyManagerFactory.getInstance("SunX509");
+                kmf = KeyManagerFactory.getInstance(SunX509);
                 kmf.init(ks, passwd.toCharArray());
             }
             // 信任库
             TrustManagerFactory tf = null;
             if (caPath != null) {
-                KeyStore tks = KeyStore.getInstance("JKS");
+                KeyStore tks = KeyStore.getInstance(JKS);
                 tIN = new FileInputStream(caPath);
                 tks.load(tIN, passwd.toCharArray());
-                tf = TrustManagerFactory.getInstance("SunX509");
+                tf = TrustManagerFactory.getInstance(SunX509);
                 tf.init(tks);
             }
 
@@ -286,13 +289,13 @@ public class SSLContextFactory {
             KeyManagerFactory kmf = null;
             if (pkPath != null) {
                 // 密钥库KeyStore
-                KeyStore ks = KeyStore.getInstance("JKS");
+                KeyStore ks = KeyStore.getInstance(JKS);
                 // 加载服务端证书
                 in = new FileInputStream(pkPath);
                 // 加载服务端的KeyStore ；sNetty是生成仓库时设置的密码，用于检查密钥库完整性的密码
                 ks.load(in, passwd.toCharArray());
 
-                kmf = KeyManagerFactory.getInstance("SunX509");
+                kmf = KeyManagerFactory.getInstance(SunX509);
                 // 初始化密钥管理器
                 kmf.init(ks, passwd.toCharArray());
             }
@@ -300,10 +303,10 @@ public class SSLContextFactory {
             // 信任库
             TrustManagerFactory tf = null;
             if (caPath != null) {
-                KeyStore tks = KeyStore.getInstance("JKS");
+                KeyStore tks = KeyStore.getInstance(JKS);
                 tIN = new FileInputStream(caPath);
                 tks.load(tIN, passwd.toCharArray());
-                tf = TrustManagerFactory.getInstance("SunX509");
+                tf = TrustManagerFactory.getInstance(SunX509);
                 tf.init(tks);
             }
 
@@ -346,19 +349,19 @@ public class SSLContextFactory {
         try {
             KeyManagerFactory kmf = null;
             if (pkPath != null) {
-                KeyStore ks = KeyStore.getInstance("JKS");
+                KeyStore ks = KeyStore.getInstance(JKS);
                 in = new FileInputStream(pkPath);
                 ks.load(in, passwd.toCharArray());
-                kmf = KeyManagerFactory.getInstance("SunX509");
+                kmf = KeyManagerFactory.getInstance(SunX509);
                 kmf.init(ks, passwd.toCharArray());
             }
 
             TrustManagerFactory tf = null;
             if (caPath != null) {
-                KeyStore tks = KeyStore.getInstance("JKS");
+                KeyStore tks = KeyStore.getInstance(JKS);
                 tIN = new FileInputStream(caPath);
                 tks.load(tIN, passwd.toCharArray());
-                tf = TrustManagerFactory.getInstance("SunX509");
+                tf = TrustManagerFactory.getInstance(SunX509);
                 tf.init(tks);
             }
 
@@ -408,13 +411,13 @@ public class SSLContextFactory {
             KeyManagerFactory kmf = null;
             if (pkPath != null) {
                 // 密钥库KeyStore
-                KeyStore ks = KeyStore.getInstance("JKS");
+                KeyStore ks = KeyStore.getInstance(JKS);
                 // 加载服务端证书
                 in = new FileInputStream(pkPath);
                 // 加载服务端的KeyStore ；sNetty是生成仓库时设置的密码，用于检查密钥库完整性的密码
                 ks.load(in, passwd.toCharArray());
 
-                kmf = KeyManagerFactory.getInstance("SunX509");
+                kmf = KeyManagerFactory.getInstance(SunX509);
                 // 初始化密钥管理器
                 kmf.init(ks, passwd.toCharArray());
             }
@@ -422,10 +425,10 @@ public class SSLContextFactory {
             // 信任库
             TrustManagerFactory tf = null;
             if (caPath != null) {
-                KeyStore tks = KeyStore.getInstance("JKS");
+                KeyStore tks = KeyStore.getInstance(JKS);
                 tIN = new FileInputStream(caPath);
                 tks.load(tIN, passwd.toCharArray());
-                tf = TrustManagerFactory.getInstance("SunX509");
+                tf = TrustManagerFactory.getInstance(SunX509);
                 tf.init(tks);
             }
 

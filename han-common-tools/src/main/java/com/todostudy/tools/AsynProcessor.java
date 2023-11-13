@@ -13,7 +13,7 @@ import java.util.concurrent.*;
  */
 public class AsynProcessor {
     private static ExecutorService exec = new ThreadPoolExecutor(2, 4, 0L,
-            TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>(200),
+            TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>(100),
             new ThreadPoolExecutor.CallerRunsPolicy());
     public static void execute(Runnable command) {
         exec.execute(command);

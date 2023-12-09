@@ -1,7 +1,6 @@
 # 开发环境配置
 spring:
         profiles: dev
-        cache: memory
         redis:
                 host: 192.168.6.43
                 port: 6379
@@ -16,22 +15,22 @@ han:
                                 send-sub-topic: http://192.168.6.44:8080/api/checkTopic #返回true /false
                                 send-msg: http://192.168.6.44:8080/api/message  #无需返回
                                 send-state: http://192.168.6.44:8080/api/state  #无需返回
-                        cache-type: memory # redis/memory
+                        cache-type: redis # redis/memory
                         retain-msg-time: 2
-                        ssl-auth: false # 默认账号密码认证，默认不开启ssl认证
+                        ssl-auth: true # 默认账号密码认证，默认不开启ssl认证
                         ssl-config:
                                 enable: false # 默认false 单向认证， true是双向认证，
-                                keystore-path: keystore/sChat.jks
-                                keystore-pwd: 123456
+                                ssl-port: 18883
+                                ssl-user-auth: false # 单向认证有效设置 ： 是否需要客户端和服务认证
+                                keystore-path: keystore/client.keystore.jks
+                                keystore-pwd: 1234qwer
                                 truststore-path: keystore/xxx.ca
                                 truststore-pwd:    # 请设置和 keystore-pwd 同一个秘密，代码中直接使用的是keystore-pwd ,可以自行修改
-                        ws-enable: true
+                        ws-enable: false
                         # broker唯一标识
                         id: mqtt-broker-1
-                        # SSL端口
-                        ssl-port: 1883
-                        # SSL密钥文件密码
-                        ssl-password: 123456
+                        # 端口
+                        port: 1883
                         # 传输大小 单位：m ,默认2m
                         max-trans-message: 2
                         # websocket端口

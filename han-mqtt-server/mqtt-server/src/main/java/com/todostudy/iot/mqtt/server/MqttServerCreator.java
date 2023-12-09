@@ -30,7 +30,7 @@ public class MqttServerCreator {
     /**
      * 默认内存缓存
      */
-    private String cacheType= Tools.CACHE_MEMORY;
+    private String cacheType = Tools.CACHE_MEMORY;
     /**
      * 是否开启Epoll模式, 默认关闭
      */
@@ -44,10 +44,6 @@ public class MqttServerCreator {
 
     private boolean wsEnable;
     /**
-     * SSL端口号, 默认8883端口
-     */
-    private int sslPort = 8885;
-    /**
      * WebSocket SSL端口号, 默认9993端口
      */
     private int websocketSslPort = 9995;
@@ -55,7 +51,7 @@ public class MqttServerCreator {
     /**
      * 默认2m的传输大小。单位 M
      */
-    private int maxTransMessage=2;
+    private int maxTransMessage = 2;
 
     /**
      * WebSocket Path值, 默认值 /mqtt
@@ -109,34 +105,28 @@ public class MqttServerCreator {
     private RedisServices redisServices;
 
 
-
-
     public MqttBrokerServer build(SessionStoreService sessionStoreService) {
         //内部bean的初始化
         messageIdService = new MessageIdService();
-        dupPublishMessageStoreService=new DupPublishMessageMemoryStoreService(messageIdService);
-        dupPubRelMessageStoreService=new DupPubRelMessageMemoryStoreService(messageIdService);
-        if(getCacheType().equals(Tools.CACHE_MEMORY)){
-            retainMessageStoreService=new RetainMessageMemoryStoreService();
-            subscribeStoreService=new SubscribeStoreMemoryService();
+        dupPublishMessageStoreService = new DupPublishMessageMemoryStoreService(messageIdService);
+        dupPubRelMessageStoreService = new DupPubRelMessageMemoryStoreService(messageIdService);
+        if (getCacheType().equals(Tools.CACHE_MEMORY)) {
+            retainMessageStoreService = new RetainMessageMemoryStoreService();
+            subscribeStoreService = new SubscribeStoreMemoryService();
 
-        }else if(getCacheType().equals(Tools.CACHE_REDIS)){
-            retainMessageStoreService=new RetainMessageRedisStoreService(redisServices);
-            subscribeStoreService=new SubscribeRedisStoreService(redisServices);
+        } else if (getCacheType().equals(Tools.CACHE_REDIS)) {
+            redisServices = new RedisServices(redisTemplate, retainMsgTime);
+            retainMessageStoreService = new RetainMessageRedisStoreService(redisServices);
+            subscribeStoreService = new SubscribeRedisStoreService(redisServices);
         }
         MqttServerProcessor mqttServerProcessor = new MqttServerProcessor(sessionStoreService, subscribeStoreService, authService,
                 messageIdService, retainMessageStoreService, dupPublishMessageStoreService,
                 dupPubRelMessageStoreService, mqttListenMessage, mqttListenConnect, checkSubscribeValidator);
         MqttBrokerHandler mqttBrokerHandler = new MqttBrokerHandler(mqttServerProcessor);
-        MqttServerTemplateProcessor mqttServerTemplateProcessor = new MqttServerTemplateProcessor(sessionStoreService,subscribeStoreService);
+        MqttServerTemplateProcessor mqttServerTemplateProcessor = new MqttServerTemplateProcessor(sessionStoreService, subscribeStoreService);
         // MqttServer
-        MqttBrokerServer thisMqttServer = new MqttBrokerServer(sessionStoreService, this, mqttBrokerHandler,mqttServerTemplateProcessor);
+        MqttBrokerServer thisMqttServer = new MqttBrokerServer(sessionStoreService, this, mqttBrokerHandler, mqttServerTemplateProcessor);
         return thisMqttServer;
-    }
-
-    public MqttServerCreator sslPort(int sslPort) {
-        this.sslPort = sslPort;
-        return this;
     }
 
     public MqttServerCreator port(int port) {
@@ -144,10 +134,6 @@ public class MqttServerCreator {
         return this;
     }
 
-    /* public MqttServerCreator readBufferSize(int readBufferSize) {
-         this.readBufferSize = readBufferSize;
-         return this;
-     }*/
     public MqttServerCreator authService(IAuthService authService) {
         this.authService = authService;
         return this;
@@ -187,10 +173,12 @@ public class MqttServerCreator {
         this.sslAuth = sslAuth;
         return this;
     }
+
     public MqttServerCreator cacheType(String cacheType) {
         this.cacheType = cacheType;
         return this;
     }
+
     public MqttServerCreator redisTemplate(RedisTemplate redisTemplate) {
         this.redisTemplate = redisTemplate;
         return this;
@@ -203,17 +191,27 @@ public class MqttServerCreator {
 
     @Builder
     @Data
-    public static class SslConfig{
+    public static class SslConfig {
         //当 sslAuth =  true
         private boolean enable;
+        /**
+         * SSL端口号, 默认 18883
+         */
+        private int sslPort;
+        /**
+         * 启用ssl服务端认证
+         */
+        private boolean sslUserAuth;
         private String keystorePath;
         private String keystorePwd;
         private String truststorePath;
         private String truststorePwd;
     }
-    public SslConfig builderSslConfig(boolean enable,String keystorePath,String keystorePwd,String truststorePath,String truststorePwd){
-        return new SslConfig(enable,keystorePath,keystorePwd,truststorePath,truststorePwd);
+
+    public SslConfig builderSslConfig(boolean enable, int sslPort, boolean sslUserAuth, String keystorePath, String keystorePwd, String truststorePath, String truststorePwd) {
+        return new SslConfig(enable, sslPort, sslUserAuth, keystorePath, keystorePwd, truststorePath, truststorePwd);
     }
+
     public MqttServerCreator sslConfig(SslConfig sslConfig) {
         this.sslConfig = sslConfig;
         return this;

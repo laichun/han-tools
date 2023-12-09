@@ -45,12 +45,7 @@ public class HanMqttBrokerProperties {
 	/**
 	 * 端口 默认 1883
 	 */
-	private int port;
-
-	/**
-	 * SSL端口号, 默认 1883
-	 */
-	private int sslPort = 1883;
+	private int port=1883;
 
 	/**
 	 * WebSocket SSL端口号, 默认9993端口
@@ -114,6 +109,14 @@ public class HanMqttBrokerProperties {
 	public static class SslConfig{
 		//当 sslAuth =  true
 		private boolean enable;
+		/**
+		 * SSL端口号, 默认 18883
+		 */
+		private int sslPort;
+		/**
+		 * 启用ssl服务端认证
+		 */
+		private boolean sslUserAuth=false;
 		private String keystorePath;
 		private String keystorePwd;
 		private String truststorePath;
@@ -128,7 +131,5 @@ public class HanMqttBrokerProperties {
 		private String sendMsg;
 		private String sendState;
 	}
-
-
 
 }

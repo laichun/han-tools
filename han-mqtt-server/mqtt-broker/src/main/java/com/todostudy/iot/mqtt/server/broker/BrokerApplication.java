@@ -11,7 +11,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 /**
  * 通过SpringBoot启动服务
  */
-@SpringBootApplication(scanBasePackages = {"com.todostudy.iot.mqtt.server"})
+@SpringBootApplication(scanBasePackages = {"com.todostudy.iot.mqtt.server.broker"})
 public class BrokerApplication {
 
     public static void main(String[] args) {

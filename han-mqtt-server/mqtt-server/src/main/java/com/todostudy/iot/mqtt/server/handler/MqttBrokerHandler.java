@@ -26,6 +26,9 @@ import org.springframework.util.StringUtils;
 
 import java.io.IOException;
 
+import static io.netty.handler.codec.mqtt.MqttMessageType.CONNACK;
+import static io.netty.handler.codec.mqtt.MqttQoS.AT_MOST_ONCE;
+
 /**
  * MQTT消息处理 不能使用单例
  */
@@ -46,11 +49,13 @@ public class MqttBrokerHandler extends ChannelInboundHandlerAdapter implements G
 
 	@Override
 	public void channelUnregistered(ChannelHandlerContext ctx) throws Exception {
+		log.debug("------disconnection------channelUnregistered isRegistered:{}",ctx.channel().isRegistered());//Channel 已经被创建，但还未注册到 EventLoop
 		super.channelUnregistered(ctx);
-		//log.debug("------disconnection------channelUnregistered");
-		if(ctx.channel()!=null) {
-			protocolProcess.disConnect().processDisConnect(ctx.channel(), null);
-		}
+		ctx.channel().close();
+		///ctx.close();
+		/*if(ctx.channel()!=null) {
+			protocolProcess.disConnect().processDisConnect(ctx, null);
+		}*/
 	}
 
 	@Override
@@ -95,7 +100,7 @@ public class MqttBrokerHandler extends ChannelInboundHandlerAdapter implements G
 			case PINGRESP:
 				break;
 			case DISCONNECT:
-				protocolProcess.disConnect().processDisConnect(ctx.channel(), msg);
+				protocolProcess.disConnect().processDisConnect(ctx, msg);
 				break;
 			default:
 				break;
@@ -138,5 +143,29 @@ public class MqttBrokerHandler extends ChannelInboundHandlerAdapter implements G
 	@Override
 	public void operationComplete(Future<? super Void> future) throws Exception {
 		log.debug("=============[{}] channel closed", "");
+	}
+
+	/**
+	 * 服务端每完整的读完一次数据，都会回调该方法
+	 */
+/*	@Override
+	public void channelReadComplete(ChannelHandlerContext ctx) {
+          super.channelReadComplete(ctx);
+    }*/
+
+	/**
+	 * 该客户端与服务端的连接被关闭时回调
+	 */
+	@Override
+	public void channelInactive(ChannelHandlerContext ctx) throws Exception {
+		super.channelInactive(ctx);
+	}
+
+	private MqttConnAckMessage createMqttConnAckMsg(MqttConnectReturnCode returnCode, MqttConnectMessage msg) {
+		MqttFixedHeader mqttFixedHeader =
+				new MqttFixedHeader(CONNACK, false, AT_MOST_ONCE, false, 0);
+		MqttConnAckVariableHeader mqttConnAckVariableHeader =
+				new MqttConnAckVariableHeader(returnCode, !msg.variableHeader().isCleanSession());
+		return new MqttConnAckMessage(mqttFixedHeader, mqttConnAckVariableHeader);
 	}
 }

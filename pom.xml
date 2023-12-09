@@ -29,9 +29,9 @@
         <module>han-mqtt-server/mqtt-common</module>
         <module>han-mqtt-server/mqtt-server</module>
         <module>han-mqtt-server/han-mqtt-service-spring-stater</module>
-       <!-- <module>han-mqtt-server/mqtt-broker</module>
+        <module>han-mqtt-server/mqtt-broker</module>
         <module>han-mqtt-server/mqtt-example</module>
-        <module>han-mqtt-server/mqtt-example-client</module>-->
+        <module>han-mqtt-server/mqtt-example-client</module>
     </modules>
 
     <developers>
@@ -100,6 +100,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.10.1</version>
                 <configuration>
                     <source>11</source>
                     <target>11</target>
@@ -109,6 +110,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
+                <version>3.2.1</version>
                 <executions>
                     <execution>
                         <id>attach-sources</id>

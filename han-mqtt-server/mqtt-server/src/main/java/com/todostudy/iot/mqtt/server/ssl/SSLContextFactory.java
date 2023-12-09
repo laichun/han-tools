@@ -6,10 +6,7 @@ import io.netty.handler.ssl.SslContextBuilder;
 import io.netty.handler.ssl.SslProvider;
 import lombok.extern.slf4j.Slf4j;
 
-import javax.net.ssl.KeyManagerFactory;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLEngine;
-import javax.net.ssl.TrustManagerFactory;
+import javax.net.ssl.*;
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.KeyStore;
@@ -22,7 +19,7 @@ public class SSLContextFactory {
 
     private static final String PROTOCOL = "TLS";
     private static final String JKS = "JKS";
-    private static final String SunX509="SunX509";
+    private static final String SunX509 = "SunX509";
 
     private static SSLContext SERVER_CONTEXT;// 服务器安全套接字协议
 
@@ -33,13 +30,13 @@ public class SSLContextFactory {
     private static SslContext openSslClientContext;
 
     /**
-     * @param isAuth false为单向认证，true为双向认证
+     * @param isAuth        false为单向认证，true为双向认证
      * @param pkInputStream
      * @param caInputStream
      * @param passwd
      * @return
      */
-    public static SSLEngine getSslServerEngine(boolean isAuth,InputStream pkInputStream,InputStream caInputStream, String passwd ) {
+    public static SSLEngine getSslServerEngine(boolean isAuth, InputStream pkInputStream, InputStream caInputStream, String passwd) {
 
         SSLEngine sslEngine = null;
         if (isAuth) {
@@ -47,15 +44,17 @@ public class SSLContextFactory {
                     caInputStream, passwd)
                     .createSSLEngine();
         } else {
-            sslEngine = getServerContext(pkInputStream,
-                    passwd).createSSLEngine();
+            sslEngine = getServerContextJKS(pkInputStream,
+                    caInputStream, passwd).createSSLEngine();
         }
 
         sslEngine.setUseClientMode(false);
-        sslEngine.setEnabledProtocols(new String[] { "TLSv1", "TLSv1.1",
-                "TLSv1.2" });
+        sslEngine.setEnabledProtocols(new String[]{"TLSv1", "TLSv1.1",
+                "TLSv1.2"});
         // false为单向认证，true为双向认证
         sslEngine.setNeedClientAuth(isAuth);
+        //sslEngine.setUseClientMode(true);
+        sslEngine.setWantClientAuth(true);
         return sslEngine;
     }
 
@@ -78,7 +77,7 @@ public class SSLContextFactory {
             kmf.init(ks, passwd.toCharArray());
 
             // 获取安全套接字协议（TLS协议）的对象
-            SERVER_CONTEXT = SSLContext.getInstance(PROTOCOL);
+            SERVER_CONTEXT = SSLContext.getInstance("TLSv1.2");
             // 初始化此上下文
             // 参数一：认证的密钥 参数二：对等信任认证 参数三：伪随机数生成器 。 由于单向认证，服务端不用验证客户端，所以第二个参数为null
             SERVER_CONTEXT.init(kmf.getKeyManagers(), null, null);
@@ -98,36 +97,6 @@ public class SSLContextFactory {
         return SERVER_CONTEXT;
     }
 
-    public static SslContext getOpenSslServerContext(InputStream pkInputStream,
-                                                     String passwd) {
-        if (openSslContext != null) {
-            return openSslContext;
-        }
-
-        try {
-            // 密钥管理器
-            KeyManagerFactory kmf = null;
-
-            // 密钥库KeyStore
-            KeyStore ks = KeyStore.getInstance(JKS);
-            // 加载服务端证书
-            // 加载服务端的KeyStore ；sNetty是生成仓库时设置的密码，用于检查密钥库完整性的密码
-            ks.load(pkInputStream, passwd.toCharArray());
-
-            kmf = KeyManagerFactory.getInstance(SunX509);
-            // 初始化密钥管理器
-            kmf.init(ks, passwd.toCharArray());
-
-            openSslContext = SslContextBuilder.forServer(kmf)
-                    .sslProvider(SslProvider.OPENSSL).build();
-            return openSslContext;
-        } catch (Exception e) {
-           log.error("error:" , e);
-        }
-
-        return null;
-
-    }
 
     public static SSLContext getClientContext(InputStream pkInputStream, String passwd) {
         if (CLIENT_CONTEXT != null)
@@ -178,7 +147,7 @@ public class SSLContextFactory {
 
             return openSslClientContext;
         } catch (Exception e) {
-            log.error("error:" , e);
+            log.error("error:", e);
         }
         return null;
     }
@@ -221,19 +190,70 @@ public class SSLContextFactory {
             // 单向认证？无需验证客户端证书
             if (tf == null) {
                 SERVER_CONTEXT.init(kmf.getKeyManagers(), null, null);
-            }
-            // 双向认证，需要验证客户端证书
-            else {
+            } else {
                 SERVER_CONTEXT.init(kmf.getKeyManagers(),
                         tf.getTrustManagers(), null);
             }
 
         } catch (Exception e) {
+            e.printStackTrace();
             throw new Error("Failed to initialize the server-side SSLContext",
                     e);
         }
         return SERVER_CONTEXT;
     }
+
+    public static SSLContext getServerContextJKS(InputStream pkInputStream,
+                                                 InputStream caInputStream,String passwd) {
+        if (SERVER_CONTEXT != null)
+            return SERVER_CONTEXT;
+
+        InputStream tIN = null;
+        try {
+            // 密钥管理器
+            KeyManagerFactory kmf = null;
+            KeyStore ks = KeyStore.getInstance(JKS);
+            ks.load(pkInputStream, passwd.toCharArray());
+
+            kmf = KeyManagerFactory.getInstance(SunX509);
+            kmf.init(ks, passwd.toCharArray());
+
+            // 信任库 tm
+            TrustManagerFactory tf = null;
+            KeyStore tks = KeyStore.getInstance(JKS);
+            tks.load(caInputStream, passwd.toCharArray());
+            TrustManagerFactory tmFactory = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
+            tmFactory.init(ks);
+            TrustManager x509wrapped = getX509TrustManager(tmFactory);
+            TrustManager[] tm = {x509wrapped};
+            //tks.load(pkInputStream,passwd.toCharArray()));
+            // tf = TrustManagerFactory.getInstance(SunX509);
+            //tf.init(tks);
+
+            SERVER_CONTEXT = SSLContext.getInstance("TLSv1.2");
+
+            SERVER_CONTEXT.init(kmf.getKeyManagers(),
+                    tm, null);
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new Error("Failed to initialize the server-side SSLContext",
+                    e);
+        }
+        return SERVER_CONTEXT;
+    }
+    private static TrustManager getX509TrustManager(TrustManagerFactory tmf) {
+        X509TrustManager x509Tm = null;
+        for (TrustManager tm : tmf.getTrustManagers()) {
+            if (tm instanceof X509TrustManager) {
+                x509Tm = (X509TrustManager) tm;
+                break;
+            }
+        }
+        return null;
+    }
+
 
     public static SslContext getOpenSslServerContext(InputStream pkInputStream,
                                                      InputStream caInputStream, String passwd) {
@@ -243,30 +263,30 @@ public class SSLContextFactory {
         try {
             // 密钥管理器
             KeyManagerFactory kmf = null;
-                // 密钥库KeyStore
-                KeyStore ks = KeyStore.getInstance(JKS);
-                // 加载服务端证书
-                // 加载服务端的KeyStore ；sNetty是生成仓库时设置的密码，用于检查密钥库完整性的密码
-                ks.load(pkInputStream, passwd.toCharArray());
+            // 密钥库KeyStore
+            KeyStore ks = KeyStore.getInstance(JKS);
+            // 加载服务端证书
+            // 加载服务端的KeyStore ；sNetty是生成仓库时设置的密码，用于检查密钥库完整性的密码
+            ks.load(pkInputStream, passwd.toCharArray());
 
-                kmf = KeyManagerFactory.getInstance(SunX509);
-                // 初始化密钥管理器
-                kmf.init(ks, passwd.toCharArray());
+            kmf = KeyManagerFactory.getInstance(SunX509);
+            // 初始化密钥管理器
+            kmf.init(ks, passwd.toCharArray());
 
 
             // 信任库
             TrustManagerFactory tf = null;
-                KeyStore tks = KeyStore.getInstance(JKS);
-                tks.load(caInputStream, passwd.toCharArray());
-                tf = TrustManagerFactory.getInstance(SunX509);
-                tf.init(tks);
+            KeyStore tks = KeyStore.getInstance(JKS);
+            tks.load(caInputStream, passwd.toCharArray());
+            tf = TrustManagerFactory.getInstance(SunX509);
+            tf.init(tks);
 
 
             openSslContext = SslContextBuilder.forServer(kmf).trustManager(tf)
                     .sslProvider(SslProvider.OPENSSL).build();
             return openSslContext;
         } catch (Exception e) {
-            log.error("error:" , e);
+            log.error("error:", e);
         }
         return null;
 
@@ -281,17 +301,17 @@ public class SSLContextFactory {
         try {
             KeyManagerFactory kmf = null;
 
-                KeyStore ks = KeyStore.getInstance(JKS);
-                ks.load(pkInputStream, passwd.toCharArray());
-                kmf = KeyManagerFactory.getInstance(SunX509);
-                kmf.init(ks, passwd.toCharArray());
+            KeyStore ks = KeyStore.getInstance(JKS);
+            ks.load(pkInputStream, passwd.toCharArray());
+            kmf = KeyManagerFactory.getInstance(SunX509);
+            kmf.init(ks, passwd.toCharArray());
 
             TrustManagerFactory tf = null;
-                KeyStore tks = KeyStore.getInstance(JKS);
+            KeyStore tks = KeyStore.getInstance(JKS);
 
-                tks.load(caInputStream, passwd.toCharArray());
-                tf = TrustManagerFactory.getInstance(SunX509);
-                tf.init(tks);
+            tks.load(caInputStream, passwd.toCharArray());
+            tf = TrustManagerFactory.getInstance(SunX509);
+            tf.init(tks);
 
             CLIENT_CONTEXT = SSLContext.getInstance(PROTOCOL);
             // 初始化此上下文
@@ -315,21 +335,21 @@ public class SSLContextFactory {
         try {
             // 密钥管理器
             KeyManagerFactory kmf = null;
-                // 密钥库KeyStore
-                KeyStore ks = KeyStore.getInstance(JKS);
-                // 加载服务端证书
-                // 加载服务端的KeyStore ；sNetty是生成仓库时设置的密码，用于检查密钥库完整性的密码
-                ks.load(pkInputStream, passwd.toCharArray());
-                kmf = KeyManagerFactory.getInstance(SunX509);
-                // 初始化密钥管理器
-                kmf.init(ks, passwd.toCharArray());
+            // 密钥库KeyStore
+            KeyStore ks = KeyStore.getInstance(JKS);
+            // 加载服务端证书
+            // 加载服务端的KeyStore ；sNetty是生成仓库时设置的密码，用于检查密钥库完整性的密码
+            ks.load(pkInputStream, passwd.toCharArray());
+            kmf = KeyManagerFactory.getInstance(SunX509);
+            // 初始化密钥管理器
+            kmf.init(ks, passwd.toCharArray());
 
             // 信任库
             TrustManagerFactory tf = null;
-                KeyStore tks = KeyStore.getInstance(JKS);
-                tks.load(caInputStream, passwd.toCharArray());
-                tf = TrustManagerFactory.getInstance(SunX509);
-                tf.init(tks);
+            KeyStore tks = KeyStore.getInstance(JKS);
+            tks.load(caInputStream, passwd.toCharArray());
+            tf = TrustManagerFactory.getInstance(SunX509);
+            tf.init(tks);
 
             openSslClientContext = SslContextBuilder.forClient()
                     .sslProvider(SslProvider.OPENSSL).keyManager(kmf)
@@ -337,7 +357,7 @@ public class SSLContextFactory {
 
             return openSslClientContext;
         } catch (Exception e) {
-            log.error("error:" , e);
+            log.error("error:", e);
         }
         return null;
     }

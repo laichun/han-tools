@@ -9,7 +9,6 @@ import com.todostudy.iot.mqtt.server.codec.MqttWebSocketCodec;
 import com.todostudy.iot.mqtt.server.handler.MqttBrokerHandler;
 import com.todostudy.iot.mqtt.server.protocol.MqttServerTemplateProcessor;
 import com.todostudy.iot.mqtt.server.session.SessionStoreService;
-import com.todostudy.iot.mqtt.server.ssl.SSLContextFactory;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.*;
 import io.netty.channel.epoll.EpollEventLoopGroup;
@@ -25,14 +24,24 @@ import io.netty.handler.codec.mqtt.MqttDecoder;
 import io.netty.handler.codec.mqtt.MqttEncoder;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
+import io.netty.handler.ssl.SslContext;
+import io.netty.handler.ssl.SslContextBuilder;
 import io.netty.handler.ssl.SslHandler;
 import io.netty.handler.timeout.IdleStateHandler;
 import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.SSLEngine;
+import javax.net.ssl.SSLException;
+import java.io.IOException;
 import java.io.InputStream;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.UnrecoverableKeyException;
+import java.security.cert.CertificateException;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -70,13 +79,11 @@ public class MqttBrokerServer {
 	public static MqttServerCreator createServer() {
 		return new MqttServerCreator();
 	}
-
-	private static final String PROTOCOL = "TLS";
-
+	SSLEngine sslServerEngine=null;
+	SslContext sslContext = null;
 	public void start() {
 		bossGroup = serverCreator.isUseEpoll() ? new EpollEventLoopGroup() : new NioEventLoopGroup();
 		workerGroup = serverCreator.isUseEpoll() ? new EpollEventLoopGroup() : new NioEventLoopGroup();
-		SSLEngine sslServerEngine=null;
 		try {
 			// start mqtt
 			if (serverCreator.isSslAuth()) {
@@ -85,9 +92,8 @@ public class MqttBrokerServer {
 				if(serverCreator.getSslConfig().isEnable()){
 					caInputStream = this.getClass().getClassLoader().getResourceAsStream(serverCreator.getSslConfig().getTruststorePath());
 				}
-				 sslServerEngine = SSLContextFactory.getSslServerEngine(serverCreator.getSslConfig().isEnable(),
-						inputStream, caInputStream, serverCreator.getSslConfig().getKeystorePwd());
-				mqttSSLServer(sslServerEngine);
+
+				mqttSSLServer(this.getNettySslContext(inputStream, caInputStream));
 
 			} else {
 				mqttNoSSLServer();
@@ -98,8 +104,9 @@ public class MqttBrokerServer {
 				websocketServer(sslServerEngine);
 				log.info("MQTT websocket is start isSslAuth:{} is up and running.  webSocketPort: {},the cacheType:{}", "[" + serverCreator.isSslAuth() + "]",  serverCreator.getWebsocketSslPort(),serverCreator.getCacheType());
 			}
-			log.info("MQTT Broker is start isSslAuth:{} is up and running. mqPort: {},the cacheType:{}", "[" + serverCreator.isSslAuth() + "]", serverCreator.getSslPort(), serverCreator.getCacheType());
+			log.info("MQTT Broker is start isSslAuth:{} is up and running.,the cacheType:{}", "[" + serverCreator.isSslAuth() + "]", serverCreator.getCacheType());
 		}catch (Exception e){
+			e.printStackTrace();
 			log.error("error=>",e);
 		}
 	}
@@ -109,12 +116,22 @@ public class MqttBrokerServer {
 		bossGroup = null;
 		workerGroup.shutdownGracefully();
 		workerGroup = null;
+		if(sslServerEngine!=null){
+			try {
+				sslServerEngine.closeInbound();
+				sslServerEngine.closeOutbound();
+			} catch (SSLException e) {
+				throw new RuntimeException(e);
+			}
+
+		}
 		channel.closeFuture().syncUninterruptibly();
 		channel = null;
 		if (serverCreator.isWsEnable()) {
 			websocketChannel.closeFuture().syncUninterruptibly();
 			websocketChannel = null;
 		}
+
 
 	}
 
@@ -151,8 +168,8 @@ public class MqttBrokerServer {
 					}).option(ChannelOption.SO_BACKLOG, serverCreator.getSoBacklog())
 					.childOption(ChannelOption.SO_KEEPALIVE, Boolean.TRUE);
 
-			channel = b.bind(serverCreator.getSslPort()).sync().channel();
-			log.info("MQTT 启动，监听端口:{}", serverCreator.getSslPort());
+			channel = b.bind(serverCreator.getPort()).sync().channel();
+			log.info("MQTT 启动，监听端口:{}", serverCreator.getPort());
 		} catch (Exception e) {
 			log.error("启动mqtt server失败", e);
 			System.exit(1);
@@ -160,7 +177,7 @@ public class MqttBrokerServer {
 
 	}
 
-	private void mqttSSLServer(SSLEngine sslEngine) throws Exception {
+	private void mqttSSLServer(SslContext sslContext) throws Exception {
 		ServerBootstrap sb = new ServerBootstrap();
 		sb.group(bossGroup, workerGroup)
 			.channel(serverCreator.isUseEpoll() ? EpollServerSocketChannel.class : NioServerSocketChannel.class)
@@ -170,6 +187,11 @@ public class MqttBrokerServer {
 			.childHandler(new ChannelInitializer<SocketChannel>() {
 				@Override
 				protected void initChannel(SocketChannel socketChannel) throws Exception {
+
+					// Netty提供的SSL处理
+					SSLEngine sslEngine = sslContext.newEngine(socketChannel.alloc());
+					sslEngine.setWantClientAuth(true);
+					sslEngine.setUseClientMode(true);
 					ChannelPipeline channelPipeline = socketChannel.pipeline();
 					// Netty提供的心跳检测
 					channelPipeline.addFirst("idle", new IdleStateHandler(0, 0, serverCreator.getKeepAlive()));
@@ -184,7 +206,8 @@ public class MqttBrokerServer {
 			})
 			.option(ChannelOption.SO_BACKLOG, serverCreator.getSoBacklog())
 			.childOption(ChannelOption.SO_KEEPALIVE, serverCreator.isSoKeepAlive());
-		channel = sb.bind(serverCreator.getSslPort()).sync().channel();
+		channel = sb.bind(serverCreator.getSslConfig().getSslPort()).sync().channel();
+		log.info("MQTT ssl 启动，监听端口:{}", serverCreator.getSslConfig().getSslPort());
 	}
 
 	void websocketServer(SSLEngine sslEngine) throws Exception {
@@ -220,5 +243,29 @@ public class MqttBrokerServer {
 			.childOption(ChannelOption.SO_KEEPALIVE, serverCreator.isSoKeepAlive());
 		websocketChannel = sb.bind(serverCreator.getWebsocketSslPort()).sync().channel();
 	}
+
+	public SslContext getNettySslContext(InputStream inputStream,InputStream caInputStream) {
+        KeyStore keyStore = null;
+        try {
+            keyStore = KeyStore.getInstance("JKS");
+			keyStore.load(inputStream, serverCreator.getSslConfig().getKeystorePwd().toCharArray());
+			KeyManagerFactory kmf = KeyManagerFactory.getInstance("SunX509");
+			kmf.init(keyStore, serverCreator.getSslConfig().getKeystorePwd().toCharArray());
+			return SslContextBuilder.forServer(kmf).build();
+        } catch (KeyStoreException e) {
+            throw new RuntimeException(e);
+        } catch (UnrecoverableKeyException e) {
+            throw new RuntimeException(e);
+        } catch (CertificateException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+    }
 
 }

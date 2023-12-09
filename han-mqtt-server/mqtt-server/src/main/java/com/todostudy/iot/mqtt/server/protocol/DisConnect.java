@@ -13,6 +13,7 @@ import com.todostudy.iot.mqtt.server.common.session.ISessionStoreService;
 import com.todostudy.iot.mqtt.server.common.session.SessionStore;
 import com.todostudy.iot.mqtt.server.common.subscribe.ISubscribeStoreService;
 import io.netty.channel.Channel;
+import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.mqtt.MqttMessage;
 import io.netty.util.AttributeKey;
 import lombok.extern.slf4j.Slf4j;
@@ -44,8 +45,8 @@ public class DisConnect {
 		this.iMqttListenConnect = iMqttListenConnect;
 	}
 
-	public void processDisConnect(Channel channel, MqttMessage msg) {
-		String clientId = (String) channel.attr(AttributeKey.valueOf(Tools.clientId)).get();
+	public void processDisConnect(ChannelHandlerContext cht, MqttMessage msg) {
+		String clientId = (String) cht.channel().attr(AttributeKey.valueOf(Tools.clientId)).get();
 		if(!StringUtils.isEmpty(clientId)) {
 			SessionStore sessionStore = sessionStoreService.get(clientId);
 			if (sessionStore != null) {
@@ -57,10 +58,18 @@ public class DisConnect {
 				log.debug("DISCONNECT - clientId: {}, cleanSession: {}", clientId, sessionStore.isCleanSession());
 				String userName = sessionStore.getUserName();
 				sessionStoreService.remove(clientId);
-				channel.close();
+				cht.close();
 				iMqttListenConnect.offline(clientId, userName, "DisConnect");
 			}
+		}else{
+			cht.channel().close();
 		}
+		log.info("processDisConnect-------------");
+		/*System.out.println(cht.channel());
+		if(cht!=null){
+			cht.channel().close();
+			cht.close();
+		}*/
 	}
 
 }

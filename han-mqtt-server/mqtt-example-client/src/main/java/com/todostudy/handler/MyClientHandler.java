@@ -16,6 +16,7 @@ public class MyClientHandler extends ChannelInboundHandlerAdapter {
         System.out.println("链接报告IP:" + channel.localAddress().getHostString());
         System.out.println("链接报告Port:" + channel.localAddress().getPort());
         System.out.println("链接报告完毕");
+
         //通知客户端链接建立成功
         String str = "通知服务端链接建立成功" + " " + new Date() + " " + channel.localAddress().getHostString() + "\r\n";
         ctx.writeAndFlush(str);

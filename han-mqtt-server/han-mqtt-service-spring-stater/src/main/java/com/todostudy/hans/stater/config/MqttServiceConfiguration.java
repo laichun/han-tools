@@ -33,7 +33,7 @@ public class MqttServiceConfiguration {
                                                ObjectProvider<ICheckSubscribeValidator> checkSubscribeValidatorsProvider,
                                                ObjectProvider<RedisTemplate> redisTemplate){
 
-        MqttServerCreator mqttServerCreator = MqttBrokerServer.createServer().sslPort(properties.getSslPort())
+        MqttServerCreator mqttServerCreator = MqttBrokerServer.createServer().port(properties.getPort())
                 .sslAuth(properties.isSslAuth()).wsEnable(properties.isWsEnable()).retainMsgTime(properties.getRetainMsgTime())
                 .cacheType(properties.getCacheType()).port(properties.getPort()).maxTransMessage(properties.getMaxTransMessage());
 
@@ -45,8 +45,8 @@ public class MqttServiceConfiguration {
 
         //ssl-config
         if(properties.isSslAuth()){
-           mqttServerCreator.sslConfig(mqttServerCreator.builderSslConfig(properties.getSslConfig().isEnable()
-           ,properties.getSslConfig().getKeystorePath(),properties.getSslConfig().getKeystorePwd(),
+           mqttServerCreator.sslConfig(mqttServerCreator.builderSslConfig(properties.getSslConfig().isEnable(),properties.getSslConfig().getSslPort(),
+                   properties.getSslConfig().isSslUserAuth(),properties.getSslConfig().getKeystorePath(),properties.getSslConfig().getKeystorePwd(),
                    properties.getSslConfig().getTruststorePath(),properties.getSslConfig().getTruststorePwd()));
         }
         //检查如果使用redis 必须注入 redisTemplate

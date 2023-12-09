@@ -16,10 +16,10 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
  * @Desciprtion: reids 配置
  */
 @Configuration
-@Order(-1)
+//@Order(-1)
 public class RedisConfig {
     //    为了在service中调用redis的操作类, 提前通过@Bean的方式准备好
-    @Bean
+  /*  @Bean
     public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory factory) {
         // 实例化一个RedisTemplate(操作redis中不同数据类型的CRUD)
         RedisTemplate<String, Object> template = new RedisTemplate<String, Object>();
@@ -49,5 +49,5 @@ public class RedisConfig {
         template.setHashValueSerializer(jackson2JsonRedisSerializer);
         template.afterPropertiesSet();
         return template;
-    }
+    }*/
 }

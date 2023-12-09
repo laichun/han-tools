@@ -1,3 +1,4 @@
+/*
 package com.todostudy;
 
 import io.netty.bootstrap.Bootstrap;
@@ -9,14 +10,18 @@ import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.ssl.SslContext;
 import io.netty.handler.ssl.SslContextBuilder;
 import io.netty.handler.ssl.SslProvider;
+import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 
 import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.TrustManagerFactory;
 import java.security.KeyStore;
 
-public class NettyMqttClient {
+public class NettyMqttClient  {
+    private MqttConnectOptions info = new MqttConnectOptions();
     private static final String JKS = "JKS";
     private static final String SunX509="SunX509";
+
+    protected  ChannelFuture future =null;
 
     public static void main(String[] args) throws Exception {
         new NettyMqttClient().connect("127.0.0.1",1883);
@@ -34,7 +39,10 @@ public class NettyMqttClient {
                     .channel(NioSocketChannel.class)
                     .option(ChannelOption.AUTO_READ,true)
                     .handler(new TsClientChannelInitializer(sslContext));
-            ChannelFuture future=bootstrap.connect(address,port).sync();
+            future=bootstrap.connect(address,port).sync();
+            info.setPassword("pwd".toCharArray());
+            info.setUserName("user");
+            future.channel().writeAndFlush(info);
             System.out.println("netty client start done ....");
             future.channel().closeFuture().sync();
         }catch (Exception e){
@@ -60,7 +68,7 @@ public class NettyMqttClient {
         SslContext sslContext = SslContextBuilder.forClient()
                 .keyManager(keyManagerFactory)
                // .ciphers(ciphers)
-                .sslProvider(SslProvider.OPENSSL) //同样也要加入相应jar包
+                //.sslProvider(SslProvider.OPENSSL) //同样也要加入相应jar包
                 .trustManager(tf)
                 .build();
         return sslContext;
@@ -68,3 +76,4 @@ public class NettyMqttClient {
 
 
 }
+*/

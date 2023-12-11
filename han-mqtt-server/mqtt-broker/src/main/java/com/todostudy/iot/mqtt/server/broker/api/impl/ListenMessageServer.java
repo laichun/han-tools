@@ -26,9 +26,7 @@ public class ListenMessageServer implements IMqttListenMessage, SmartInitializin
 
     @Override
     public void onMessage(String clientId, String topic, MqttQoS qos, byte[] message){
-        System.out.println(clientId);
         log.info("--onMessage---clientId:{},msg:{}",clientId, new String(message));
-
         if(clientId.equals("hanson")){
             mqttServerTemplate.sendMsg(clientId,"hanson/dddd/ts",MqttQoS.AT_MOST_ONCE,"{\"msg:\":\"success\"}".getBytes());
            //测试发送离线消息

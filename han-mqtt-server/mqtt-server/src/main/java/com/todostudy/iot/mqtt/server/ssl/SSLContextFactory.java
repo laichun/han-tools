@@ -1,6 +1,5 @@
 package com.todostudy.iot.mqtt.server.ssl;
 
-import io.netty.buffer.ByteBufAllocator;
 import io.netty.handler.ssl.ClientAuth;
 import io.netty.handler.ssl.SslContext;
 import io.netty.handler.ssl.SslContextBuilder;
@@ -8,7 +7,6 @@ import io.netty.handler.ssl.SslProvider;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.net.ssl.*;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.KeyStore;
@@ -28,14 +26,9 @@ public class SSLContextFactory {
     private static final String SunX509 = "SunX509";
 
     private static SSLContext SERVER_CONTEXT;// 服务器安全套接字协议
-
-    private static SslContext openSslContext;
-
     private static SSLContext CLIENT_CONTEXT;// 客户端安全套接字协议
 
     private static SslContext openSslClientContext;
-
-
 
     // 单向认证的 netty 的 sslContext
     public static SslContext getNettySslContext(boolean clientAuth,InputStream inputStream,String passwd) {
@@ -46,17 +39,8 @@ public class SSLContextFactory {
             KeyManagerFactory kmf = KeyManagerFactory.getInstance(SunX509);
             kmf.init(keyStore, passwd.toCharArray());
             return SslContextBuilder.forServer(kmf).build();
-        } catch (KeyStoreException e) {
-            throw new RuntimeException(e);
-        } catch (UnrecoverableKeyException e) {
-            throw new RuntimeException(e);
-        } catch (CertificateException e) {
-            throw new RuntimeException(e);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException(e);
-        } catch (Exception e) {
+        } catch (KeyStoreException | UnrecoverableKeyException | CertificateException | IOException |
+                 NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
         }
     }
@@ -64,12 +48,10 @@ public class SSLContextFactory {
     //双向认证
     public static SslContext getNettySslContext(InputStream certChainFileIs, InputStream  keyFileIs, InputStream  rootFileIs) {
         try {
-            SslContext sslContext= SslContextBuilder
-                    .forServer(certChainFileIs,keyFileIs)
+            return  SslContextBuilder.forServer(certChainFileIs,keyFileIs)
                     .trustManager(rootFileIs)
                     .clientAuth(ClientAuth.REQUIRE)
                     .build();
-            return sslContext;
         } catch (SSLException e) {
             throw new RuntimeException(e);
         }

@@ -64,12 +64,6 @@ public class DisConnect {
 		}else{
 			cht.channel().close();
 		}
-		log.info("processDisConnect-------------");
-		/*System.out.println(cht.channel());
-		if(cht!=null){
-			cht.channel().close();
-			cht.close();
-		}*/
 	}
 
 }

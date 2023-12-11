@@ -26,23 +26,14 @@ import io.netty.handler.codec.mqtt.MqttEncoder;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
 import io.netty.handler.ssl.SslContext;
-import io.netty.handler.ssl.SslContextBuilder;
 import io.netty.handler.ssl.SslHandler;
 import io.netty.handler.timeout.IdleStateHandler;
 import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.SSLEngine;
-import javax.net.ssl.SSLException;
-import java.io.IOException;
 import java.io.InputStream;
-import java.security.KeyStore;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.security.UnrecoverableKeyException;
-import java.security.cert.CertificateException;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -169,7 +160,6 @@ public class MqttBrokerServer {
             log.info("MQTT 启动，监听端口:{}", serverCreator.getPort());
         } catch (Exception e) {
             log.error("启动mqtt server失败", e);
-            System.exit(1);
         }
 
     }
@@ -194,6 +184,8 @@ public class MqttBrokerServer {
                             sslEngine.setWantClientAuth(false);//单向认证
                             //TODO: true使用客户端模式，是否需要验证客户端,需要客户端证书和密码。由开发认证自己扩展 目前只支持 false
                             sslEngine.setUseClientMode(serverCreator.getSslConfig().isSslUserAuth());
+                        }else{
+                            sslEngine.setNeedClientAuth(true); //双向认证 是否需要验证客户端
                         }
                         // Netty提供的SSL处理
                         channelPipeline.addLast("ssl", new SslHandler(sslEngine));// 不要ssl就去掉

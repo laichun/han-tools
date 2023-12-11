@@ -52,10 +52,7 @@ public class MqttBrokerHandler extends ChannelInboundHandlerAdapter implements G
 		log.debug("------disconnection------channelUnregistered isRegistered:{}",ctx.channel().isRegistered());//Channel 已经被创建，但还未注册到 EventLoop
 		super.channelUnregistered(ctx);
 		ctx.channel().close();
-		///ctx.close();
-		/*if(ctx.channel()!=null) {
-			protocolProcess.disConnect().processDisConnect(ctx, null);
-		}*/
+		//ctx.close();
 	}
 
 	@Override

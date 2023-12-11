@@ -28,5 +28,7 @@ keytool -import -trustcacerts -alias hanson -file cChat.cer -storepass 123456 -k
 * 客户端需要3个证书。 对应 文件夹 ssl-server 和 ssl-client
 * 生成方式，参考 https://www.alibabacloud.com/help/zh/iot/use-cases/connect-an-mqtt-gateway-device-to-iot-platform-by-using-mqtt-fx#9f1d9fa0767zf
 * 阿里的文档有很细的说明。
-* 
-
+## 区别
+与单向认证不同的是， 双向认证中，服务端也需要对客户端进行安全认证，这就意味着客户端的自签名证书也需要导入到服务器的数组证书仓库中。
+我们一般使用https，都是单向认证，就是我们详细该网站就是可信任的网站，不是伪造假冒的。
+我们使用网上银行或者一些需要高安全性的服务时需要双向认证，因为有U盾之类的东西，银行或者其他需要高安全性的服务已经将颁发给我们的证书添加到自己的信任列表中了。

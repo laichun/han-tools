@@ -74,13 +74,6 @@ public class PahoMqttClientSerMsg {
      */
     public static void main(String[] args) throws MqttException {
         PahoMqttClientSerMsg server = new PahoMqttClientSerMsg();
-
-        server.message = new MqttMessage();
-        server.message.setQos(1);  //保证消息能到达一次
-        server.message.setRetained(true);
-        server.message.setPayload("这是推送消息的内容".getBytes());
-        server.publish(server.topic11 , server.message);
-        System.out.println(server.message.isRetained() + "------ratained状态");
     }
 
 }

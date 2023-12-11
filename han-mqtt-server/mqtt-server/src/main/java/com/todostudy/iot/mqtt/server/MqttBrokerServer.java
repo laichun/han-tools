@@ -181,7 +181,7 @@ public class MqttBrokerServer {
                         // Netty提供的SSL处理
                         SSLEngine sslEngine = sslContext.newEngine(socketChannel.alloc());
                         if (!serverCreator.getSslConfig().isTwoWay()) {
-                            sslEngine.setWantClientAuth(false);//单向认证
+                            sslEngine.setNeedClientAuth(false);//单向认证
                             //TODO: true使用客户端模式，是否需要验证客户端,需要客户端证书和密码。由开发认证自己扩展 目前只支持 false
                             sslEngine.setUseClientMode(serverCreator.getSslConfig().isSslUserAuth());
                         }else{
@@ -222,6 +222,8 @@ public class MqttBrokerServer {
                                 //TODO: true使用客户端模式，是否需要验证客户端,需要客户端证书和密码。由开发认证自己扩展 ,目前只支持 false
                                 sslEngine.setUseClientMode(serverCreator.getSslConfig().isSslUserAuth());
                                 sslEngine.setNeedClientAuth(false);        // 不需要验证客户端，即单向认证
+                            }else{
+                                sslEngine.setNeedClientAuth(true);
                             }
                             channelPipeline.addLast("ssl", new SslHandler(sslEngine));
 

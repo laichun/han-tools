@@ -24,7 +24,7 @@ han:
                 # 单向认证有效设置 ： 是否需要客户端和服务认证 目前只支持 false,false 只是通信层加密，目前比较适合我们设备，安全等级比较差。高频上报比较适合。
                 #如果需要安全等级高，可以使用双向认证。
                                 ssl-user-auth: false
-                                keystore-path: keystore/client.keystore.jks
+                                keystore-path: keystore/yqServer.jks
                                 keystore-pwd: 1234qwer
                                 ## 双向认证 服务端和客户端都需要3个密钥 文件
                                 two-way-cer-chain-file: ssl-server/server.crt

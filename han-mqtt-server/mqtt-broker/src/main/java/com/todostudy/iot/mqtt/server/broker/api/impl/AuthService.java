@@ -38,7 +38,7 @@ public class AuthService implements IAuthService {
 
 	@PostConstruct
 	public void init() {
-		privateKey = IoUtil.readObj(AuthService.class.getClassLoader().getResourceAsStream("keystore/auth-private.key"));
+		//privateKey = IoUtil.readObj(AuthService.class.getClassLoader().getResourceAsStream("keystore/auth-private.key"));
 	}
 
 }

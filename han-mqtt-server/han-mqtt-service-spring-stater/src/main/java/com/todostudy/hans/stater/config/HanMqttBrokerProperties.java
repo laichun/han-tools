@@ -108,7 +108,7 @@ public class HanMqttBrokerProperties {
 	@Getter
 	public static class SslConfig{
 		//当 sslAuth =  true
-		private boolean enable;
+		private boolean twoWay;
 		/**
 		 * SSL端口号, 默认 18883
 		 */
@@ -116,11 +116,13 @@ public class HanMqttBrokerProperties {
 		/**
 		 * 启用ssl服务端认证
 		 */
-		private boolean sslUserAuth=false;
+		private boolean sslUserAuth;
 		private String keystorePath;
 		private String keystorePwd;
-		private String truststorePath;
-		private String truststorePwd;
+		//下面是双向认证，当 twoWay=true时 生效。
+		private String twoWayCerChainFile;
+		private String twoWayKeyFile;
+		private String twoWayRootFile;
 	}
 
 	@Setter

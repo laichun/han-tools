@@ -104,6 +104,13 @@ public class ListenMessageServer implements IMqttListenMessage {
 - 默认只是简单使用对用户名进行RSA密钥对加密生成密码, 连接认证时对密码进行解密和相应用户名进行匹配认证
 - 使用中如果需要实现连接数据库或其他方式进行连接认证, 只需要重写`mqtt-auth`模块下的相应方法即可
 
+#### 关于双向认证
+* 客户端需要3个证书。 对应 文件夹 ssl-server 和 ssl-client
+* 生成方式，参考 https://www.alibabacloud.com/help/zh/iot/use-cases/connect-an-mqtt-gateway-device-to-iot-platform-by-using-mqtt-fx#9f1d9fa0767zf
+* 阿里的文档有很细的说明。
+*
+
+
 #### 自定义 - 服务端证书
 - 服务端证书存储在`mqtt-broker`的`resources/keystore/`
 - 用户可以制作自己的证书, 但存储位置和文件名必须使用上述描述的位置及文件名

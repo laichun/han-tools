@@ -193,7 +193,7 @@ public class MqttServerCreator {
     @Data
     public static class SslConfig {
         //当 sslAuth =  true
-        private boolean enable;
+        private boolean twoWay;
         /**
          * SSL端口号, 默认 18883
          */
@@ -204,12 +204,15 @@ public class MqttServerCreator {
         private boolean sslUserAuth;
         private String keystorePath;
         private String keystorePwd;
-        private String truststorePath;
-        private String truststorePwd;
+        //下面是双向认证，当 twoWay=true时 生效。
+        private String twoWayCerChainFile;
+        private String twoWayKeyFile;
+        private String twoWayRootFile;
     }
 
-    public SslConfig builderSslConfig(boolean enable, int sslPort, boolean sslUserAuth, String keystorePath, String keystorePwd, String truststorePath, String truststorePwd) {
-        return new SslConfig(enable, sslPort, sslUserAuth, keystorePath, keystorePwd, truststorePath, truststorePwd);
+    public SslConfig builderSslConfig(boolean twoWay, int sslPort, boolean sslUserAuth, String keystorePath, String keystorePwd,
+                                      String twoWayCerChainFile, String twoWayKeyFile,String twoWayRootFile) {
+        return new SslConfig(twoWay, sslPort, sslUserAuth, keystorePath, keystorePwd, twoWayCerChainFile, twoWayKeyFile,twoWayRootFile);
     }
 
     public MqttServerCreator sslConfig(SslConfig sslConfig) {

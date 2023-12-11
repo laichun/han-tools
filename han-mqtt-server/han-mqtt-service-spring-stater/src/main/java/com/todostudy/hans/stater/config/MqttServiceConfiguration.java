@@ -43,11 +43,13 @@ public class MqttServiceConfiguration {
         authServicesProvider.ifAvailable(mqttServerCreator::authService);
         checkSubscribeValidatorsProvider.ifAvailable(mqttServerCreator::checkSubscribeValidator);
 
-        //ssl-config
+        /**
+         * ssl-config ,支持单向和双休认证
+         */
         if(properties.isSslAuth()){
-           mqttServerCreator.sslConfig(mqttServerCreator.builderSslConfig(properties.getSslConfig().isEnable(),properties.getSslConfig().getSslPort(),
+           mqttServerCreator.sslConfig(mqttServerCreator.builderSslConfig(properties.getSslConfig().isTwoWay(),properties.getSslConfig().getSslPort(),
                    properties.getSslConfig().isSslUserAuth(),properties.getSslConfig().getKeystorePath(),properties.getSslConfig().getKeystorePwd(),
-                   properties.getSslConfig().getTruststorePath(),properties.getSslConfig().getTruststorePwd()));
+                   properties.getSslConfig().getTwoWayCerChainFile(),properties.getSslConfig().getTwoWayKeyFile(),properties.getSslConfig().getTwoWayRootFile()));
         }
         //检查如果使用redis 必须注入 redisTemplate
         if(properties.getCacheType().equals(Tools.CACHE_REDIS)){
@@ -76,6 +78,5 @@ public class MqttServiceConfiguration {
     public MqttServerTemplate mqttServerTemplate(MqttBrokerServer mqttBrokerServer) {
         return new MqttServerTemplate(mqttBrokerServer.getMqttServerTemplateProcessor());
     }
-
 
 }

@@ -24,3 +24,9 @@ keytool -import -trustcacerts -alias hanson -file cChat.cer -storepass 123456 -k
 如果使用  client.keystore.jks
 客户端使用 
 
+## 关于双向认证
+* 客户端需要3个证书。 对应 文件夹 ssl-server 和 ssl-client
+* 生成方式，参考 https://www.alibabacloud.com/help/zh/iot/use-cases/connect-an-mqtt-gateway-device-to-iot-platform-by-using-mqtt-fx#9f1d9fa0767zf
+* 阿里的文档有很细的说明。
+* 
+

@@ -17,15 +17,20 @@ han:
                                 send-state: http://192.168.6.44:8080/api/state  #无需返回
                         cache-type: redis # redis/memory
                         retain-msg-time: 2
-                        ssl-auth: true # 默认账号密码认证，默认不开启ssl认证
+                        ssl-auth: false # 默认账号密码认证，默认不开启ssl认证
                         ssl-config:
-                                enable: false # 默认false 单向认证， true是双向认证，
+                                two-way: false # 默认false 单向认证， true是双向认证，
                                 ssl-port: 18883
-                                ssl-user-auth: false # 单向认证有效设置 ： 是否需要客户端和服务认证
+                # 单向认证有效设置 ： 是否需要客户端和服务认证 目前只支持 false,false 只是通信层加密，目前比较适合我们设备，安全等级比较差。高频上报比较适合。
+                #如果需要安全等级高，可以使用双向认证。
+                                ssl-user-auth: false
                                 keystore-path: keystore/client.keystore.jks
                                 keystore-pwd: 1234qwer
-                                truststore-path: keystore/xxx.ca
-                                truststore-pwd:    # 请设置和 keystore-pwd 同一个秘密，代码中直接使用的是keystore-pwd ,可以自行修改
+                                ## 双向认证 服务端和客户端都需要3个密钥 文件
+                                two-way-cer-chain-file: ssl-server/server.crt
+                                two-way-key-file: ssl-server/pkcs8_server.key
+                                two-way-root-file: ssl-server/ca.crt
+
                         ws-enable: false
                         # broker唯一标识
                         id: mqtt-broker-1
@@ -34,7 +39,7 @@ han:
                         # 传输大小 单位：m ,默认2m
                         max-trans-message: 2
                         # websocket端口
-                        websocket-ssl-port: 9995
+                        websocket-ssl-port: 18884
                         # websocket path 值
                         websocket-path: /mqtt
                         # 心跳时间(秒)

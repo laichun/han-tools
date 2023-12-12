@@ -17,7 +17,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.data.redis.core.RedisTemplate;
-
+/**
+ * @Author: hanson
+ */
 @Slf4j
 @Configuration(proxyBeanMethods = false)
 @EnableConfigurationProperties(value = {HanMqttBrokerProperties.class})

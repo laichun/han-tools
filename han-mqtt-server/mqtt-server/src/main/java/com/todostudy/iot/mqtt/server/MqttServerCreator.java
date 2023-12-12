@@ -23,7 +23,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.Getter;
 import org.springframework.data.redis.core.RedisTemplate;
-
+/**
+ * @Author: hanson
+ */
 @Getter
 public class MqttServerCreator {
 

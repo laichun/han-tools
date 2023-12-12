@@ -12,7 +12,7 @@ import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 /**
- * author:laich  Date:2021/9/10
+ * @Author:laich  Date:2021/9/10
  *
  * @Desciprtion: reids 配置 注意 mqtt 需要 bean 名称是： redisTemplate
  */

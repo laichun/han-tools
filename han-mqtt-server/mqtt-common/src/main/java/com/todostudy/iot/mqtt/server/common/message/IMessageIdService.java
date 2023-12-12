@@ -1,5 +1,6 @@
 /**
- * Copyright (c) 2018, Mr.Wang (recallcode@aliyun.com) All rights reserved.
+ * @author: hanson
+ * email :317856394@qq.com
  */
 
 package com.todostudy.iot.mqtt.server.common.message;

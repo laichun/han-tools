@@ -12,7 +12,9 @@ import org.springframework.boot.configurationprocessor.json.JSONStringer;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
-
+/**
+ * @Author: hanson
+ */
 @ConditionalOnProperty(value = "han.mqtt.broker.http-enable", havingValue = "true")
 @Component
 public class HttpMqttListenMessage implements IMqttListenMessage  {

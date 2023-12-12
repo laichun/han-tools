@@ -38,9 +38,9 @@ keytool -export -alias hanson -keystore yqClient.jks -storepass 1234qwer -file y
 第六步 将客户端的自签名证书导入到服务器端的信任证书仓库中：
 keytool -import -trustcacerts -alias hanson -file yqClient.cer -storepass 1234qwer -keystore yqServer.jks
 ```
-到此，证书就生成完毕了，我们就可以得到两个jks文件，一个是服务端的yqServer.jks ，一个是客户端的yqClient.jks , 两个cer文件yqServer.cer和yqClient.cer  共4个文件，服务端和客户端都需要2个证书。
-这种方式和 使用第三方 openssl生成的双向认证有出入我们使用服务端和客户端3个证书那种，当然用 netty
-对这2种方法的双向认证都是支持的。
+到此，证书就生成完毕了，我们就可以得到两个jks文件，一个是服务端的yqServer.jks ，一个是客户端的yqClient.jks , 
+两个cer文件yqServer.cer和yqClient.cer  共4个文件，服务端和客户端都需要2个证书。 这种方式和使用第三方 
+openssl生成的双向认证有出入我们使用服务端和客户端3个证书那种，当然用 netty 对这2种方法的双向认证都是支持的。
 
 * 目前的代码对双向认证的支持采用 openssl 的生成方式。 即服务端和客户端3个证书那种：
 ## 关于双向认证

@@ -1,7 +1,7 @@
 /**
- * Copyright (c) 2018, Mr.Wang (recallcode@aliyun.com) All rights reserved.
+ * @Author: hanson
+ * email :317856394@qq.com
  */
-
 package com.todostudy.iot.mqtt.server.broker;
 
 import org.springframework.boot.SpringApplication;

@@ -6,7 +6,10 @@ import io.netty.handler.codec.mqtt.MqttTopicSubscription;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-
+/**
+ * @author: hanson
+ * email :317856394@qq.com
+ */
 @Service
 public class MySubscribeValidator  implements ICheckSubscribeValidator {
     @Override

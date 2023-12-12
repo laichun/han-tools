@@ -14,7 +14,7 @@ import org.springframework.util.Assert;
 import java.util.List;
 
 /**
- * hanson
+ * @Author: hanson
  * 检查订阅的mqtt
  */
 @ConditionalOnProperty(value = "han.mqtt.broker.http-enable", havingValue = "true")

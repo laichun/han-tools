@@ -49,7 +49,9 @@ public class MqttBrokerHandler extends ChannelInboundHandlerAdapter implements G
 
 	@Override
 	public void channelUnregistered(ChannelHandlerContext ctx) throws Exception {
-		log.debug("------disconnection------channelUnregistered isRegistered:{}",ctx.channel().isRegistered());//Channel 已经被创建，但还未注册到 EventLoop
+		log.debug("===> disconnection------channelUnregistered isRegistered:{}",ctx.channel().isRegistered());//Channel 已经被创建，但还未注册到 EventLoop
+		//非正常断开连接事件通知
+		protocolProcess.disConnect().processDisConnect(ctx, null);
 		super.channelUnregistered(ctx);
 		ctx.channel().close();
 		//ctx.close();
@@ -91,7 +93,7 @@ public class MqttBrokerHandler extends ChannelInboundHandlerAdapter implements G
 				break;
 			case UNSUBACK:
 				break;
-			case PINGREQ:
+			case PINGREQ: //客户机发过来的ping
 				protocolProcess.pingReq().processPingReq(ctx.channel(), msg);
 				break;
 			case PINGRESP:

@@ -158,7 +158,7 @@ public class MqttBrokerServer {
                     .childOption(ChannelOption.SO_KEEPALIVE, Boolean.TRUE);
 
             channel = b.bind(serverCreator.getPort()).sync().channel();
-            log.info("MQTT 启动，监听端口:{}", serverCreator.getPort());
+            log.info("==>MQTT 启动，监听端口:{}", serverCreator.getPort());
         } catch (Exception e) {
             log.error("启动mqtt server失败", e);
         }
@@ -201,7 +201,7 @@ public class MqttBrokerServer {
                 .option(ChannelOption.SO_BACKLOG, serverCreator.getSoBacklog())
                 .childOption(ChannelOption.SO_KEEPALIVE, serverCreator.isSoKeepAlive());
         channel = sb.bind(serverCreator.getSslConfig().getSslPort()).sync().channel();
-        log.info("MQTT ssl 启动，监听端口:{}", serverCreator.getSslConfig().getSslPort());
+        log.info("==>MQTT ssl 启动，监听端口:{}", serverCreator.getSslConfig().getSslPort());
     }
 
     void websocketServer(SslContext sslContext) throws Exception {

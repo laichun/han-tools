@@ -16,11 +16,11 @@ public class MqttListenConnectServer implements IMqttListenConnect {
 
     @Override
     public void online(String clientId, String username) {
-        System.out.println("--online--"+clientId);
+        log.info("--online--"+clientId);
     }
 
     @Override
     public void offline(String clientId, String username, String reason) {
-        System.out.println("------offline--"+clientId);
+        log.info("------offline--"+clientId);
     }
 }

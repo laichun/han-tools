@@ -57,6 +57,12 @@ public class MqttServiceConfiguration {
         if(properties.getCacheType().equals(Tools.CACHE_REDIS)){
             redisTemplate.ifAvailable(mqttServerCreator::redisTemplate);
         }
+        //ws配置
+        if(properties.isWsEnable()){
+            mqttServerCreator.wsEnableSsl(properties.isWsEnableSsl());
+            mqttServerCreator.websocketPath(properties.getWebsocketPath());
+            mqttServerCreator.websocketSslPort(properties.getWebsocketSslPort());
+        }
 
         return mqttServerCreator;
     }

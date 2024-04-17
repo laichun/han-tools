@@ -29,6 +29,7 @@
         <module>han-mqtt-server/mqtt-common</module>
         <module>han-mqtt-server/mqtt-server</module>
         <module>han-mqtt-server/han-mqtt-service-spring-stater</module>
+        <module>han-mqtt-server/mqtt-broker</module>
       <!--  <module>han-mqtt-server/mqtt-broker</module>
         <module>han-mqtt-server/mqtt-example</module>
         <module>han-mqtt-server/mqtt-example-client</module>-->

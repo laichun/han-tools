@@ -102,10 +102,10 @@ public class MqttBrokerServer {
                 websocketServer(nettySslContext);
                 log.info("MQTT websocket is start isSslAuth:{} is up and running.  webSocketPort: {},the cacheType:{}", "[" + serverCreator.isSslAuth() + "]", serverCreator.getWebsocketSslPort(), serverCreator.getCacheType());
             }
-            log.info("MQTT Broker is start isSslAuth:{} is up and running.,the cacheType:{}", "[" + serverCreator.isSslAuth() + "]", serverCreator.getCacheType());
+            //log.info("MQTT Broker is start isSslAuth:{} is up and running.,the cacheType:{}", "[" + serverCreator.isSslAuth() + "]", serverCreator.getCacheType());
         } catch (Exception e) {
             e.printStackTrace();
-            log.error("error=>", e);
+            log.error("error==>{}", e);
         }
     }
 
@@ -120,7 +120,6 @@ public class MqttBrokerServer {
             websocketChannel.closeFuture().syncUninterruptibly();
             websocketChannel = null;
         }
-
 
     }
 
@@ -189,7 +188,7 @@ public class MqttBrokerServer {
                             sslEngine.setNeedClientAuth(true); //双向认证 是否需要验证客户端
                         }
                         // Netty提供的SSL处理
-                        channelPipeline.addLast("ssl", new SslHandler(sslEngine));// 不要ssl就去掉
+                        channelPipeline.addLast("ssl", new SslHandler(sslEngine));
 
                         channelPipeline.addLast("decoder", new MqttDecoder(1024 * 1024 * serverCreator.getMaxTransMessage()));
                         channelPipeline.addLast("encoder", MqttEncoder.INSTANCE);
@@ -216,7 +215,7 @@ public class MqttBrokerServer {
                         ChannelPipeline channelPipeline = socketChannel.pipeline();
                         // Netty提供的心跳检测
                         channelPipeline.addFirst("idle", new IdleStateHandler(0, 0, serverCreator.getKeepAlive()));
-                        if (sslContext != null && serverCreator.isSslAuth()) {
+                        if (sslContext != null && serverCreator.isWsEnableSsl()) {
                             // Netty提供的SSL处理
                             SSLEngine sslEngine = sslContext.newEngine(socketChannel.alloc());
                             if (!serverCreator.getSslConfig().isTwoWay()) {
@@ -245,6 +244,7 @@ public class MqttBrokerServer {
                 .option(ChannelOption.SO_BACKLOG, serverCreator.getSoBacklog())
                 .childOption(ChannelOption.SO_KEEPALIVE, serverCreator.isSoKeepAlive());
         websocketChannel = sb.bind(serverCreator.getWebsocketSslPort()).sync().channel();
+        log.info("==>WS 启动，监听端口:{}", serverCreator.getWebsocketSslPort());
     }
 
 

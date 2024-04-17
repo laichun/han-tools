@@ -22,6 +22,7 @@ import com.todostudy.iot.mqtt.server.store.subscribe.SubscribeStoreMemoryService
 import lombok.Builder;
 import lombok.Data;
 import lombok.Getter;
+import lombok.Setter;
 import org.springframework.data.redis.core.RedisTemplate;
 /**
  * @Author: hanson
@@ -45,6 +46,8 @@ public class MqttServerCreator {
     private SslConfig sslConfig;
 
     private boolean wsEnable;
+
+    private boolean wsEnableSsl;
     /**
      * WebSocket SSL端口号, 默认9993端口
      */
@@ -168,6 +171,21 @@ public class MqttServerCreator {
 
     public MqttServerCreator wsEnable(boolean wsEnable) {
         this.wsEnable = wsEnable;
+        return this;
+    }
+
+    public MqttServerCreator websocketSslPort(int websocketSslPort) {
+        this.websocketSslPort = websocketSslPort;
+        return this;
+    }
+
+    public MqttServerCreator websocketPath(String websocketPath) {
+        this.websocketPath = websocketPath;
+        return this;
+    }
+
+    public MqttServerCreator wsEnableSsl(boolean wsEnableSsl) {
+        this.wsEnableSsl = wsEnableSsl;
         return this;
     }
 

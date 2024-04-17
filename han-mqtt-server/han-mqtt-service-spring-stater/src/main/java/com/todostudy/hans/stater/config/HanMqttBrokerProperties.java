@@ -47,6 +47,7 @@ public class HanMqttBrokerProperties {
 	 */
 	private int port=1883;
 
+	private boolean wsEnableSsl = false;
 	/**
 	 * WebSocket SSL端口号, 默认9993端口
 	 */

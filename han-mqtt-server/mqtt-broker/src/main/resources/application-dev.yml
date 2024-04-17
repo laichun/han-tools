@@ -9,6 +9,8 @@ spring:
 han:
         mqtt:
                 broker:
+                        # 端口 mqtt 默认端口
+                        port: 18885
                         http-enable: false
                         http-api:
                                 send-auth: http://192.168.6.44:8080/api/auth #返回true /false
@@ -31,14 +33,15 @@ han:
                                 two-way-key-file: ssl-server/pkcs8_server.key
                                 two-way-root-file: ssl-server/ca.crt
 
-                        ws-enable: false
+                        # 是否开启 websocket
+                        ws-enable: true
+                        #是否开启websocket ssl
+                        ws-enable-ssl: false
                         # broker唯一标识
                         id: mqtt-broker-1
-                        # 端口
-                        port: 1883
                         # 传输大小 单位：m ,默认2m
                         max-trans-message: 2
-                        # websocket端口
+                        # websocket端口 不分ssl
                         websocket-ssl-port: 18884
                         # websocket path 值
                         websocket-path: /mqtt

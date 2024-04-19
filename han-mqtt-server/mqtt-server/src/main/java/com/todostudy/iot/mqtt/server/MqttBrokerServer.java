@@ -5,9 +5,12 @@
 
 package com.todostudy.iot.mqtt.server;
 
+import com.todostudy.iot.mqtt.server.api.IWebSocketService;
 import com.todostudy.iot.mqtt.server.codec.MqttWebSocketCodec;
 import com.todostudy.iot.mqtt.server.handler.MqttBrokerHandler;
+import com.todostudy.iot.mqtt.server.handler.TextWebSocketFrameHandler;
 import com.todostudy.iot.mqtt.server.protocol.MqttServerTemplateProcessor;
+import com.todostudy.iot.mqtt.server.protocol.WebSocketServerProcessor;
 import com.todostudy.iot.mqtt.server.session.SessionStoreService;
 import com.todostudy.iot.mqtt.server.ssl.SSLContextFactory;
 import io.netty.bootstrap.ServerBootstrap;
@@ -29,6 +32,7 @@ import io.netty.handler.ssl.SslContext;
 import io.netty.handler.ssl.SslHandler;
 import io.netty.handler.timeout.IdleStateHandler;
 import lombok.Getter;
+import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -60,6 +64,9 @@ public class MqttBrokerServer {
     private Channel websocketChannel;
 
     private final MqttServerTemplateProcessor mqttServerTemplateProcessor;
+
+    @Setter
+    public WebSocketServerProcessor webSocketServerProcessor;
 
     public MqttBrokerServer(SessionStoreService sessionStoreService, MqttServerCreator serverCreator,
                             MqttBrokerHandler mqttBrokerHandler, MqttServerTemplateProcessor mqttServerTemplateProcessor) {
@@ -99,7 +106,12 @@ public class MqttBrokerServer {
 
             // start websocket
             if (serverCreator.isWsEnable()) {
-                websocketServer(nettySslContext);
+                if(serverCreator.getWsModel()==1) {
+                    websocketServer1(nettySslContext);
+                }
+                else if(serverCreator.getWsModel() ==2){
+                    websocketServer2(nettySslContext);
+                }
                 log.info("MQTT websocket is start isSslAuth:{} is up and running.  webSocketPort: {},the cacheType:{}", "[" + serverCreator.isSslAuth() + "]", serverCreator.getWebsocketSslPort(), serverCreator.getCacheType());
             }
             //log.info("MQTT Broker is start isSslAuth:{} is up and running.,the cacheType:{}", "[" + serverCreator.isSslAuth() + "]", serverCreator.getCacheType());
@@ -203,7 +215,7 @@ public class MqttBrokerServer {
         log.info("==>MQTT ssl 启动，监听端口:{}", serverCreator.getSslConfig().getSslPort());
     }
 
-    void websocketServer(SslContext sslContext) throws Exception {
+    void websocketServer1(SslContext sslContext) throws Exception {
         ServerBootstrap sb = new ServerBootstrap();
         sb.group(bossGroup, workerGroup)
                 .channel(serverCreator.isUseEpoll() ? EpollServerSocketChannel.class : NioServerSocketChannel.class)
@@ -247,5 +259,48 @@ public class MqttBrokerServer {
         log.info("==>WS 启动，监听端口:{}", serverCreator.getWebsocketSslPort());
     }
 
+    void websocketServer2(SslContext sslContext) throws Exception {
+        ServerBootstrap sb = new ServerBootstrap();
+        sb.group(bossGroup, workerGroup)
+                .channel(serverCreator.isUseEpoll() ? EpollServerSocketChannel.class : NioServerSocketChannel.class)
+                // handler在初始化时就会执行
+                .handler(new LoggingHandler(LogLevel.INFO))
+                .childHandler(new ChannelInitializer<SocketChannel>() {
+                    @Override
+                    protected void initChannel(SocketChannel socketChannel) throws Exception {
+                        ChannelPipeline channelPipeline = socketChannel.pipeline();
+                        // Netty提供的心跳检测
+                        channelPipeline.addFirst("idle", new IdleStateHandler(0, 0, serverCreator.getKeepAlive()));
+                        if (sslContext != null && serverCreator.isWsEnableSsl()) {
+                            // Netty提供的SSL处理
+                            SSLEngine sslEngine = sslContext.newEngine(socketChannel.alloc());
+                            if (!serverCreator.getSslConfig().isTwoWay()) {
+                                //TODO: true使用客户端模式，是否需要验证客户端,需要客户端证书和密码。由开发认证自己扩展 ,目前只支持 false
+                                sslEngine.setUseClientMode(serverCreator.getSslConfig().isSslUserAuth());
+                                sslEngine.setNeedClientAuth(false);        // 不需要验证客户端，即单向认证
+                            }else{
+                                sslEngine.setNeedClientAuth(true);
+                            }
+                            channelPipeline.addLast("ssl", new SslHandler(sslEngine));
+
+                        }
+                        // 将请求和应答消息编码或解码为HTTP消息
+                        channelPipeline.addLast("http-codec", new HttpServerCodec());
+                        // 将HTTP消息的多个部分合成一条完整的HTTP消息
+                        channelPipeline.addLast("aggregator", new HttpObjectAggregator(1048576));
+                        // 将HTTP消息进行压缩编码
+                        channelPipeline.addLast("compressor ", new HttpContentCompressor());
+                        channelPipeline.addLast("protocol", new WebSocketServerProtocolHandler(serverCreator.getWebsocketPath(), "mqtt,mqttv3.1,mqttv3.1.1", true, 65536));
+                        channelPipeline.addLast("mqttWebSocket", new MqttWebSocketCodec());
+                        channelPipeline.addLast("decoder", new MqttDecoder(1024 * 1024 * serverCreator.getMaxTransMessage()));
+                        channelPipeline.addLast("encoder", MqttEncoder.INSTANCE);
+                        channelPipeline.addLast("broker",  new TextWebSocketFrameHandler(sessionStoreService, serverCreator.getIWebSocketService()));
+                    }
+                })
+                .option(ChannelOption.SO_BACKLOG, serverCreator.getSoBacklog())
+                .childOption(ChannelOption.SO_KEEPALIVE, serverCreator.isSoKeepAlive());
+        websocketChannel = sb.bind(serverCreator.getWebsocketSslPort()).sync().channel();
+        log.info("==>WS 启动，监听端口:{}", serverCreator.getWebsocketSslPort());
+    }
 
 }

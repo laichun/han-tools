@@ -2,12 +2,10 @@ package com.todostudy.hans.stater.config;
 
 import com.todostudy.iot.mqtt.server.MqttBrokerServer;
 import com.todostudy.iot.mqtt.server.MqttServerCreator;
-import com.todostudy.iot.mqtt.server.api.IAuthService;
-import com.todostudy.iot.mqtt.server.api.ICheckSubscribeValidator;
-import com.todostudy.iot.mqtt.server.api.IMqttListenConnect;
-import com.todostudy.iot.mqtt.server.api.IMqttListenMessage;
+import com.todostudy.iot.mqtt.server.api.*;
 import com.todostudy.iot.mqtt.server.common.Tools;
 import com.todostudy.iot.mqtt.server.protocol.MqttServerTemplateProcessor;
+import com.todostudy.iot.mqtt.server.protocol.WebSocketServerProcessor;
 import com.todostudy.iot.mqtt.server.session.SessionStoreService;
 import com.todostudy.iot.mqtt.server.store.message.MqttServerTemplate;
 import lombok.extern.slf4j.Slf4j;
@@ -32,6 +30,7 @@ public class MqttServiceConfiguration {
                                                ObjectProvider<IMqttListenConnect> iMqttListenConnectsProvider,
                                                ObjectProvider<IMqttListenMessage> iMqttListenMessagesProvider,
                                                ObjectProvider<IAuthService> authServicesProvider,
+                                               ObjectProvider<IWebSocketService> webSocketServices,
                                                ObjectProvider<ICheckSubscribeValidator> checkSubscribeValidatorsProvider,
                                                ObjectProvider<RedisTemplate> redisTemplate){
 
@@ -44,7 +43,6 @@ public class MqttServiceConfiguration {
         iMqttListenMessagesProvider.ifAvailable(mqttServerCreator::mqttListenMessage);
         authServicesProvider.ifAvailable(mqttServerCreator::authService);
         checkSubscribeValidatorsProvider.ifAvailable(mqttServerCreator::checkSubscribeValidator);
-
         /**
          * ssl-config ,支持单向和双休认证
          */
@@ -60,8 +58,12 @@ public class MqttServiceConfiguration {
         //ws配置
         if(properties.isWsEnable()){
             mqttServerCreator.wsEnableSsl(properties.isWsEnableSsl());
+            mqttServerCreator.wsModel(properties.getWsModel());
             mqttServerCreator.websocketPath(properties.getWebsocketPath());
             mqttServerCreator.websocketSslPort(properties.getWebsocketSslPort());
+            if(properties.getWsModel()==2){
+                webSocketServices.ifAvailable(mqttServerCreator::iWebSocketService);
+            }
         }
 
         return mqttServerCreator;
@@ -85,6 +87,12 @@ public class MqttServiceConfiguration {
     @Lazy
     public MqttServerTemplate mqttServerTemplate(MqttBrokerServer mqttBrokerServer) {
         return new MqttServerTemplate(mqttBrokerServer.getMqttServerTemplateProcessor());
+    }
+
+    @Bean
+    @Lazy
+    public WebSocketServerProcessor webSocketServerProcessor(MqttBrokerServer mqttBrokerServer) {
+        return mqttBrokerServer.getWebSocketServerProcessor();
     }
 
 }

@@ -1,10 +1,7 @@
 package com.todostudy.iot.mqtt.server;
 
 
-import com.todostudy.iot.mqtt.server.api.IAuthService;
-import com.todostudy.iot.mqtt.server.api.ICheckSubscribeValidator;
-import com.todostudy.iot.mqtt.server.api.IMqttListenConnect;
-import com.todostudy.iot.mqtt.server.api.IMqttListenMessage;
+import com.todostudy.iot.mqtt.server.api.*;
 import com.todostudy.iot.mqtt.server.common.Tools;
 import com.todostudy.iot.mqtt.server.common.message.IDupPubRelMessageStoreService;
 import com.todostudy.iot.mqtt.server.common.message.IDupPublishMessageStoreService;
@@ -14,6 +11,7 @@ import com.todostudy.iot.mqtt.server.common.subscribe.ISubscribeStoreService;
 import com.todostudy.iot.mqtt.server.handler.MqttBrokerHandler;
 import com.todostudy.iot.mqtt.server.protocol.MqttServerProcessor;
 import com.todostudy.iot.mqtt.server.protocol.MqttServerTemplateProcessor;
+import com.todostudy.iot.mqtt.server.protocol.WebSocketServerProcessor;
 import com.todostudy.iot.mqtt.server.session.SessionStoreService;
 import com.todostudy.iot.mqtt.server.store.cache.RedisServices;
 import com.todostudy.iot.mqtt.server.store.message.*;
@@ -42,12 +40,14 @@ public class MqttServerCreator {
      * 默认不开启ssl认证
      */
     private boolean sslAuth;
+    private int wsModel;
 
     private SslConfig sslConfig;
 
     private boolean wsEnable;
 
     private boolean wsEnableSsl;
+
     /**
      * WebSocket SSL端口号, 默认9993端口
      */
@@ -93,6 +93,8 @@ public class MqttServerCreator {
 
     private IAuthService authService;
 
+    private IWebSocketService iWebSocketService;
+
     private IMessageIdService messageIdService;
 
     public IRetainMessageStoreService retainMessageStoreService;
@@ -104,6 +106,8 @@ public class MqttServerCreator {
     private IMqttListenMessage mqttListenMessage;
 
     private IMqttListenConnect mqttListenConnect;
+
+    private WebSocketServerProcessor webSocketServerProcessor;
 
     private ICheckSubscribeValidator checkSubscribeValidator;
     private RedisTemplate redisTemplate;
@@ -131,6 +135,12 @@ public class MqttServerCreator {
         MqttServerTemplateProcessor mqttServerTemplateProcessor = new MqttServerTemplateProcessor(sessionStoreService, subscribeStoreService);
         // MqttServer
         MqttBrokerServer thisMqttServer = new MqttBrokerServer(sessionStoreService, this, mqttBrokerHandler, mqttServerTemplateProcessor);
+        //ws modelType = 2
+        if(wsModel==2){
+            webSocketServerProcessor = new WebSocketServerProcessor(sessionStoreService);
+            thisMqttServer.setWebSocketServerProcessor(webSocketServerProcessor);
+        }
+
         return thisMqttServer;
     }
 
@@ -141,6 +151,11 @@ public class MqttServerCreator {
 
     public MqttServerCreator authService(IAuthService authService) {
         this.authService = authService;
+        return this;
+    }
+
+    public MqttServerCreator iWebSocketService(IWebSocketService iWebSocketService) {
+        this.iWebSocketService = iWebSocketService;
         return this;
     }
 
@@ -191,6 +206,11 @@ public class MqttServerCreator {
 
     public MqttServerCreator sslAuth(boolean sslAuth) {
         this.sslAuth = sslAuth;
+        return this;
+    }
+
+    public MqttServerCreator wsModel(int wsModel) {
+        this.wsModel = wsModel;
         return this;
     }
 

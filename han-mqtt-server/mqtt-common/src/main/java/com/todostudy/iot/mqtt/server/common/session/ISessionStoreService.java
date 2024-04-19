@@ -4,6 +4,8 @@
 
 package com.todostudy.iot.mqtt.server.common.session;
 
+import java.util.Map;
+
 /**
  * 会话存储服务接口
  */
@@ -28,5 +30,7 @@ public interface ISessionStoreService {
 	 * 删除会话
 	 */
 	void remove(String clientId);
+
+	public Map<String, SessionStore> getAll();
 
 }

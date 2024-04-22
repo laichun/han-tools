@@ -18,7 +18,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 /**
- * 需要使用jdk11 ，只有这里使用了JDK11的特性。
+ * 需要使用jdk11 以上，只有这里使用了JDK11的特性。
  * @author  hanson
  */
 public class Tools {
@@ -30,6 +30,7 @@ public class Tools {
     public static final String topic="topic";
     public static final String CACHE_MEMORY="memory";
     public static final String CACHE_REDIS="redis";
+    public static final String S_R="?";
     private final Duration timeout = Duration.ofSeconds(10);
 
     private final byte[] lock = new byte[0];

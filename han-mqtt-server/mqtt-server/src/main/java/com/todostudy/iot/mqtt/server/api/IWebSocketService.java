@@ -14,4 +14,6 @@ public interface IWebSocketService {
     public WsAuthBo verifyAuth(HttpHeaders headers, Map<String, Object> map);
 
     public void onMessage(String id, String content);
+
+    public void offline(String id);
 }

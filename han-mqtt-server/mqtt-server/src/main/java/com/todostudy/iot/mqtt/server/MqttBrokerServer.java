@@ -271,7 +271,7 @@ public class MqttBrokerServer {
                     protected void initChannel(SocketChannel socketChannel) throws Exception {
                         ChannelPipeline channelPipeline = socketChannel.pipeline();
                         // Netty提供的心跳检测
-                        channelPipeline.addFirst("idle", new IdleStateHandler(0, 0, serverCreator.getKeepAlive()));
+                        channelPipeline.addFirst("idle", new IdleStateHandler(1, 1, serverCreator.getKeepAlive()));
                         if (sslContext != null && serverCreator.isWsEnableSsl()) {
                             // Netty提供的SSL处理
                             SSLEngine sslEngine = sslContext.newEngine(socketChannel.alloc());
@@ -293,8 +293,6 @@ public class MqttBrokerServer {
                         channelPipeline.addLast("aggregator", new HttpObjectAggregator(1048576));
                         // 将HTTP消息进行压缩编码
                         channelPipeline.addLast("compressor ", new HttpContentCompressor());
-                        // 针对客户端，如果在1分钟时没有向服务端发送读写心跳(ALL)，则主动断开
-                       // channelPipeline.addLast(new IdleStateHandler(60, 60, 60));
                         channelPipeline.addLast("protocol", new WebSocketServerProtocolHandler(serverCreator.getWebsocketPath(), null, true, 65536,true,true));
                         channelPipeline.addLast("broker",  new TextWebSocketFrameHandler(sessionStoreService, serverCreator.getIWebSocketService(),serverCreator.getWebsocketPath()));
                     }

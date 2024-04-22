@@ -45,9 +45,13 @@ public class WsMessService implements IWebSocketService, SmartInitializingSingle
     }
 
     @Override
+    public void offline(String id) {
+        log.info("===>offline id:{}", id);
+    }
+
+    @Override
     public void afterSingletonsInstantiated() {
         // 单利 bean 初始化完成之后从 ApplicationContext 中获取 bean
         webSocketServerProcessor = applicationContext.getBean(WebSocketServerProcessor.class);
-
     }
 }

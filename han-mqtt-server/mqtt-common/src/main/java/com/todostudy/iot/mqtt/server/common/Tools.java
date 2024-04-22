@@ -4,11 +4,16 @@ import cn.hutool.core.lang.Singleton;
 
 import java.net.ProxySelector;
 import java.net.URI;
+import java.net.URL;
+import java.net.URLDecoder;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.time.Duration;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -93,5 +98,25 @@ public class Tools {
         }
         return godoService;
     }
+
+    public static Map<String, Object> parseUrlParams(String url) {
+        Map<String, Object> params = new HashMap<>();
+        try {
+
+            if (url != null) {
+                String[] pairs = url.split("&");
+                for (String pair : pairs) {
+                    String[] keyValue = pair.split("=");
+                    String key = URLDecoder.decode(keyValue[0], StandardCharsets.UTF_8);
+                    String value = URLDecoder.decode(keyValue[1], StandardCharsets.UTF_8);
+                    params.put(key, value);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return params;
+    }
+
 
 }

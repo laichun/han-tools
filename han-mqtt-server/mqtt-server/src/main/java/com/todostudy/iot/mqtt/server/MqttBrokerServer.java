@@ -30,6 +30,7 @@ import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
 import io.netty.handler.ssl.SslContext;
 import io.netty.handler.ssl.SslHandler;
+import io.netty.handler.stream.ChunkedWriteHandler;
 import io.netty.handler.timeout.IdleStateHandler;
 import lombok.Getter;
 import lombok.Setter;
@@ -286,21 +287,22 @@ public class MqttBrokerServer {
                         }
                         // 将请求和应答消息编码或解码为HTTP消息
                         channelPipeline.addLast("http-codec", new HttpServerCodec());
+                        //以块的方式来写的处理器
+                        channelPipeline.addLast(new ChunkedWriteHandler());
                         // 将HTTP消息的多个部分合成一条完整的HTTP消息
                         channelPipeline.addLast("aggregator", new HttpObjectAggregator(1048576));
                         // 将HTTP消息进行压缩编码
                         channelPipeline.addLast("compressor ", new HttpContentCompressor());
-                        channelPipeline.addLast("protocol", new WebSocketServerProtocolHandler(serverCreator.getWebsocketPath(), "mqtt,mqttv3.1,mqttv3.1.1", true, 65536));
-                        channelPipeline.addLast("mqttWebSocket", new MqttWebSocketCodec());
-                        channelPipeline.addLast("decoder", new MqttDecoder(1024 * 1024 * serverCreator.getMaxTransMessage()));
-                        channelPipeline.addLast("encoder", MqttEncoder.INSTANCE);
-                        channelPipeline.addLast("broker",  new TextWebSocketFrameHandler(sessionStoreService, serverCreator.getIWebSocketService()));
+                        // 针对客户端，如果在1分钟时没有向服务端发送读写心跳(ALL)，则主动断开
+                       // channelPipeline.addLast(new IdleStateHandler(60, 60, 60));
+                        channelPipeline.addLast("protocol", new WebSocketServerProtocolHandler(serverCreator.getWebsocketPath(), null, true, 65536,true,true));
+                        channelPipeline.addLast("broker",  new TextWebSocketFrameHandler(sessionStoreService, serverCreator.getIWebSocketService(),serverCreator.getWebsocketPath()));
                     }
                 })
                 .option(ChannelOption.SO_BACKLOG, serverCreator.getSoBacklog())
                 .childOption(ChannelOption.SO_KEEPALIVE, serverCreator.isSoKeepAlive());
         websocketChannel = sb.bind(serverCreator.getWebsocketSslPort()).sync().channel();
-        log.info("==>WS 启动，监听端口:{}", serverCreator.getWebsocketSslPort());
+        log.info("==>WS 启动，监听端口:{},model:{}", serverCreator.getWebsocketSslPort(), serverCreator.getWsModel());
     }
 
 }

@@ -37,6 +37,11 @@ public class SessionStore implements Serializable {
 		this.willMessage = willMessage;
 	}
 
+	public SessionStore(String clientId, Channel channel) {
+		this.clientId = clientId;
+		this.channel = channel;
+	}
+
 	public String getClientId() {
 		return clientId;
 	}

@@ -37,7 +37,7 @@ han:
                         ws-enable: true
                         #是否开启websocket ssl
                         ws-enable-ssl: false
-                        #支持两种模式，默认是1 需要 clientId和账号密码和mqtt登录一致， 2是通过路径方式 ws://localhost:8899/xxx/token=xxx
+                        #支持两种模式，默认是1 需要 clientId和账号密码和mqtt登录一致， 2是通过路径方式 ws://localhost:8899/xxx?token=xxx
                         ws-model: 2
                         # broker唯一标识
                         id: mqtt-broker-1

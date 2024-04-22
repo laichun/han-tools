@@ -8,6 +8,7 @@ import io.netty.handler.codec.http.HttpHeaders;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.SmartInitializingSingleton;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
@@ -15,12 +16,13 @@ import org.springframework.stereotype.Service;
 import java.util.Map;
 
 @Slf4j
-@ConditionalOnProperty(prefix = "han", name = "mqtt.broker.http-enable", havingValue = "false")
+@ConditionalOnProperty(prefix = "han", name = "mqtt.broker.ws-model", havingValue = "2")
 @Service
 public class WsMessService implements IWebSocketService, SmartInitializingSingleton {
 
     @Autowired
     private ApplicationContext applicationContext;
+
     private WebSocketServerProcessor webSocketServerProcessor;
 
     @Override
@@ -46,5 +48,6 @@ public class WsMessService implements IWebSocketService, SmartInitializingSingle
     public void afterSingletonsInstantiated() {
         // 单利 bean 初始化完成之后从 ApplicationContext 中获取 bean
         webSocketServerProcessor = applicationContext.getBean(WebSocketServerProcessor.class);
+
     }
 }

@@ -1,6 +1,9 @@
 package com.todostudy.tools;
 
+import lombok.extern.slf4j.Slf4j;
+
 import java.util.concurrent.*;
+import java.util.function.Supplier;
 
 /**
  * @author hanson
@@ -11,9 +14,10 @@ import java.util.concurrent.*;
  *         Future future = submit(task);
  *         future.get();
  */
+@Slf4j
 public class AsynProcessor {
     private static ExecutorService exec = new ThreadPoolExecutor(2, 4, 0L,
-            TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>(100),
+            TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>(50),
             new ThreadPoolExecutor.CallerRunsPolicy());
     public static void execute(Runnable command) {
         exec.execute(command);
@@ -38,12 +42,26 @@ public class AsynProcessor {
         exec.shutdown();
     }
 
-    /*public static void main(String[] args) throws ExecutionException, InterruptedException {
-        Callable<String> task=()->{
+  /*  public static void main(String[] args) throws ExecutionException, InterruptedException {
+*//*        Callable<String> task=()->{
             return "ss";
         };
         Future future = submit(task);
-        System.out.println(future.get());
+        System.out.println(future.get());*//*
+        CompletableFuture<Integer> integerCompletableFuture = CompletableFuture.supplyAsync(() -> {
+            try {
+                Thread.sleep(1000 * 2);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+            return 100;
+        });
+        integerCompletableFuture.whenComplete((result,e)->{
+            System.out.printf("doing...."+result);
+
+        });
+
+        Thread.sleep(1000*5);
     }*/
 
 }

@@ -20,8 +20,6 @@ import io.netty.util.AttributeKey;
 import io.netty.util.concurrent.Future;
 import io.netty.util.concurrent.GenericFutureListener;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 
 import java.io.IOException;
@@ -49,7 +47,9 @@ public class MqttBrokerHandler extends ChannelInboundHandlerAdapter implements G
 
 	@Override
 	public void channelUnregistered(ChannelHandlerContext ctx) throws Exception {
-		log.debug("------disconnection------channelUnregistered isRegistered:{}",ctx.channel().isRegistered());//Channel 已经被创建，但还未注册到 EventLoop
+		log.debug("===> disconnection------channelUnregistered isRegistered:{}",ctx.channel().isRegistered());//Channel 已经被创建，但还未注册到 EventLoop
+		//非正常断开连接事件通知
+		protocolProcess.disConnect().processDisConnect(ctx, null);
 		super.channelUnregistered(ctx);
 		ctx.channel().close();
 		//ctx.close();
@@ -91,7 +91,7 @@ public class MqttBrokerHandler extends ChannelInboundHandlerAdapter implements G
 				break;
 			case UNSUBACK:
 				break;
-			case PINGREQ:
+			case PINGREQ: //客户机发过来的ping
 				protocolProcess.pingReq().processPingReq(ctx.channel(), msg);
 				break;
 			case PINGRESP:

@@ -91,7 +91,10 @@ public class ListenMessageServer implements IMqttListenMessage {
     }
 }
 ```
-
+```
+增加对websocket url 传参的支持(例如：/aaa/bbb?token=abababab&userName=hanson)，配置文件  ws-model = 2 ; 心跳包 ws.send('Heartbeat Packet'); 默认60秒。
+ws-model = 1 ;和mqtt方式一样。通过topic 订阅 。
+```
 #### 集群使用
 1. 开启redis 。主要存储 topic 
 2. 前端加代理 IP 负载即可以。

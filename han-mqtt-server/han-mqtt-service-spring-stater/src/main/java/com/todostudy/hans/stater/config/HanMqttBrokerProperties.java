@@ -25,12 +25,12 @@ public class HanMqttBrokerProperties {
 	/**
 	 * 缓存类型
 	 */
-	private String cacheType;
+	private String cacheType = "memory";
 
 	/**
 	 * 默认不开启ssl认证
 	 */
-	private boolean sslAuth;
+	private boolean sslAuth = false;
 
 	/**
 	 * 是否开启websocket

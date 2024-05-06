@@ -27,9 +27,12 @@ public class MqttLifecycleLauncher implements SmartLifecycle, Ordered {
 
     @Override
     public void start() {
-        log.info(" ================mqttStart===============");
+        //===banner
+        System.out.println("|_| _ __  _  _ __    _|_ _  _  |  _ \n" +
+                "| |(_|| |_> (_)| |    |_(_)(_) | _> \n" +
+                "Hanson tools ^_^ 0524");
         mqttServer.start();
-        running=true;
+        running = true;
     }
 
     @Override
@@ -47,6 +50,7 @@ public class MqttLifecycleLauncher implements SmartLifecycle, Ordered {
     public boolean isAutoStartup() {
         return true;
     }
+
     @Override
     public int getOrder() {
         return Ordered.LOWEST_PRECEDENCE;

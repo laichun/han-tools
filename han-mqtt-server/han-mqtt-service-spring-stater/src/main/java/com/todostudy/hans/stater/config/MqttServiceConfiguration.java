@@ -15,6 +15,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.data.redis.core.RedisTemplate;
+
 /**
  * @Author: hanson
  */
@@ -32,7 +33,7 @@ public class MqttServiceConfiguration {
                                                ObjectProvider<IAuthService> authServicesProvider,
                                                ObjectProvider<IWebSocketService> webSocketServices,
                                                ObjectProvider<ICheckSubscribeValidator> checkSubscribeValidatorsProvider,
-                                               ObjectProvider<RedisTemplate> redisTemplate){
+                                               ObjectProvider<RedisTemplate> redisTemplate) {
 
         MqttServerCreator mqttServerCreator = MqttBrokerServer.createServer().port(properties.getPort())
                 .sslAuth(properties.isSslAuth()).wsEnable(properties.isWsEnable()).retainMsgTime(properties.getRetainMsgTime())
@@ -46,22 +47,22 @@ public class MqttServiceConfiguration {
         /**
          * ssl-config ,支持单向和双休认证
          */
-        if(properties.isSslAuth()){
-           mqttServerCreator.sslConfig(mqttServerCreator.builderSslConfig(properties.getSslConfig().isTwoWay(),properties.getSslConfig().getSslPort(),
-                   properties.getSslConfig().isSslUserAuth(),properties.getSslConfig().getKeystorePath(),properties.getSslConfig().getKeystorePwd(),
-                   properties.getSslConfig().getTwoWayCerChainFile(),properties.getSslConfig().getTwoWayKeyFile(),properties.getSslConfig().getTwoWayRootFile()));
+        if (properties.isSslAuth()) {
+            mqttServerCreator.sslConfig(mqttServerCreator.builderSslConfig(properties.getSslConfig().isTwoWay(), properties.getSslConfig().getSslPort(),
+                    properties.getSslConfig().isSslUserAuth(), properties.getSslConfig().getKeystorePath(), properties.getSslConfig().getKeystorePwd(),
+                    properties.getSslConfig().getTwoWayCerChainFile(), properties.getSslConfig().getTwoWayKeyFile(), properties.getSslConfig().getTwoWayRootFile()));
         }
         //检查如果使用redis 必须注入 redisTemplate
-        if(properties.getCacheType().equals(Tools.CACHE_REDIS)){
+        if (properties.getCacheType().equals(Tools.CACHE_REDIS)) {
             redisTemplate.ifAvailable(mqttServerCreator::redisTemplate);
         }
         //ws配置
-        if(properties.isWsEnable()){
+        if (properties.isWsEnable()) {
             mqttServerCreator.wsEnableSsl(properties.isWsEnableSsl());
             mqttServerCreator.wsModel(properties.getWsModel());
             mqttServerCreator.websocketPath(properties.getWebsocketPath());
             mqttServerCreator.websocketSslPort(properties.getWebsocketSslPort());
-            if(properties.getWsModel()==2){
+            if (properties.getWsModel() == 2) {
                 webSocketServices.ifAvailable(mqttServerCreator::iWebSocketService);
             }
         }
@@ -73,8 +74,9 @@ public class MqttServiceConfiguration {
     public SessionStoreService sessionStoreService() {
         return new SessionStoreService();
     }
+
     @Bean
-    public MqttBrokerServer mqttBrokerServer(MqttServerCreator mqttServerCreator,SessionStoreService sessionStoreService) {
+    public MqttBrokerServer mqttBrokerServer(MqttServerCreator mqttServerCreator, SessionStoreService sessionStoreService) {
         MqttBrokerServer mqttBrokerServer = mqttServerCreator.build(sessionStoreService);
         return mqttBrokerServer;
     }
@@ -83,6 +85,7 @@ public class MqttServiceConfiguration {
     public MqttLifecycleLauncher mqttServerLauncher(MqttBrokerServer mqttBrokerServer) {
         return new MqttLifecycleLauncher(mqttBrokerServer);
     }
+
     @Bean
     @Lazy
     public MqttServerTemplate mqttServerTemplate(MqttBrokerServer mqttBrokerServer) {

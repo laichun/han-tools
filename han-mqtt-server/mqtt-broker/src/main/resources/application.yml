@@ -1,4 +1,5 @@
 spring:
         profiles:
+                # 选择要激活的配置文件，和对应配置文件中on-profile属性值对应。
                 active: dev
 

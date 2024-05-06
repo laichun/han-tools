@@ -4,7 +4,6 @@ import com.todostudy.iot.mqtt.server.MqttBrokerServer;
 import com.todostudy.iot.mqtt.server.MqttServerCreator;
 import com.todostudy.iot.mqtt.server.api.*;
 import com.todostudy.iot.mqtt.server.common.Tools;
-import com.todostudy.iot.mqtt.server.protocol.MqttServerTemplateProcessor;
 import com.todostudy.iot.mqtt.server.protocol.WebSocketServerProcessor;
 import com.todostudy.iot.mqtt.server.session.SessionStoreService;
 import com.todostudy.iot.mqtt.server.store.message.MqttServerTemplate;
@@ -23,7 +22,6 @@ import org.springframework.data.redis.core.RedisTemplate;
 @EnableConfigurationProperties(value = {HanMqttBrokerProperties.class})
 public class MqttServiceConfiguration {
 
-    private MqttServerTemplateProcessor mqttServerTemplateProcessor;
 
     @Bean
     public MqttServerCreator mqttServerCreator(HanMqttBrokerProperties properties,

@@ -1,2 +1,0 @@
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-com.todostudy.hans.stater.config.MqttServiceConfiguration

@@ -5,8 +5,6 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.eclipse.paho.client.mqttv3.*;
 
-import javax.annotation.PostConstruct;
-
 /**
  * 初始化MQTT客户端
  *
@@ -62,7 +60,7 @@ public class MqttPahoService {
     /**
      * MQTT客户端启动
      */
-    @PostConstruct
+//    @PostConstruct
     public void connect() {
         if (userName == null || address == null || passWord == null) {
             return;

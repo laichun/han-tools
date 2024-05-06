@@ -1,11 +1,14 @@
 # 开发环境配置
 spring:
-        profiles: dev
-        redis:
-                host: 192.168.6.43
-                port: 6379
-                password: 1234qwer
-                database: 5
+        config:
+                activate:
+                        on-profile: dev
+        data:
+                redis:
+                        host: 192.168.6.43
+                        port: 6379
+                        password: 1234qwer
+                        database: 5
 han:
         mqtt:
                 broker:

@@ -115,6 +115,11 @@ public class MqttBrokerServer {
                 }
                 log.info("MQTT websocket is start isSslAuth:{} is up and running.  webSocketPort: {},the cacheType:{}", "[" + serverCreator.isSslAuth() + "]", serverCreator.getWebsocketSslPort(), serverCreator.getCacheType());
             }
+            //===banner
+            System.out.println(" ╦ ╦┌─┐┌┐┌┌─┐┌─┐┌┐┌  ┌┬┐┌─┐┌─┐┬  ┌─┐\n" +
+                                "╠═╣├─┤│││└─┐│ ││││   │ │ ││ ││  └─┐\n" +
+                                "╩ ╩┴ ┴┘└┘└─┘└─┘┘└┘   ┴ └─┘└─┘┴─┘└─┘\n" +
+                                "Hanson tools ^_^ 0524");
             //log.info("MQTT Broker is start isSslAuth:{} is up and running.,the cacheType:{}", "[" + serverCreator.isSslAuth() + "]", serverCreator.getCacheType());
         } catch (Exception e) {
             e.printStackTrace();

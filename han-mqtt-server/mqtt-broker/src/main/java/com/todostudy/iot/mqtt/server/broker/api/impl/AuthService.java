@@ -5,7 +5,6 @@
 
 package com.todostudy.iot.mqtt.server.broker.api.impl;
 
-import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.StrUtil;
 import com.todostudy.iot.mqtt.server.api.IAuthService;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;

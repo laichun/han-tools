@@ -22,7 +22,6 @@ public class AuthService implements IAuthService {
 
 	private RSAPrivateKey privateKey;
 
-
 	public boolean verifyAuth(String username, String password,String clientId) {
 		System.out.println("-----------------"+username+"_"+password+"_"+clientId);
 		if (StrUtil.isBlank(username)) return false;

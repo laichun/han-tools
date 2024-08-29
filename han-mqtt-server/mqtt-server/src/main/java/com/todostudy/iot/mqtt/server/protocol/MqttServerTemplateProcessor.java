@@ -28,7 +28,7 @@ public class MqttServerTemplateProcessor {
 
     public ChannelFuture sendMsg(String clientId, String topic, MqttQoS qos, byte[] message) {
         SessionStore sessionStore = sessionStoreService.get(clientId);
-        if(sessionStore!=null) {
+        if (sessionStore != null) {
             Channel channel = sessionStore.getChannel();
             MqttPublishMessage pubMessage = (MqttPublishMessage) MqttMessageFactory.newMessage(
                     new MqttFixedHeader(MqttMessageType.PUBLISH,
@@ -55,7 +55,7 @@ public class MqttServerTemplateProcessor {
 
     public ChannelFuture sendMsgRetain(String clientId, String topic, MqttQoS qos, byte[] message) {
         SessionStore sessionStore = sessionStoreService.get(clientId);
-        if(sessionStore!=null) {
+        if (sessionStore != null) {
             Channel channel = sessionStore.getChannel();
             MqttPublishMessage pubMessage = (MqttPublishMessage) MqttMessageFactory.newMessage(
                     new MqttFixedHeader(MqttMessageType.PUBLISH,
@@ -84,11 +84,19 @@ public class MqttServerTemplateProcessor {
             @Override
             public void run() {
                 List<SubscribeStore> subscribeStores = subscribeStoreService.search(topic);
-                subscribeStores.forEach(item->{
-                    sendMsg(item.getClientId(),  topic,  qos, message);
+                subscribeStores.forEach(item -> {
+                    sendMsg(item.getClientId(), topic, qos, message);
                 });
             }
         });
 
+    }
+
+    public void disConnect(String clientId) {
+        sessionStoreService.remove(clientId);
+    }
+
+    public boolean isOnline(String clientId) {
+        return sessionStoreService.containsKey(clientId);
     }
 }

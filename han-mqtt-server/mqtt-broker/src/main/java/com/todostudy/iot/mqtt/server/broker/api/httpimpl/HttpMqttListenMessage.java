@@ -34,4 +34,14 @@ public class HttpMqttListenMessage implements IMqttListenMessage  {
         }
     }
 
+    @Override
+    public void disConnect(String clientId) {
+        //todo:未实现
+    }
+
+    @Override
+    public boolean isOnline(String clientId) {
+        return false;//todo:未实现
+    }
+
 }

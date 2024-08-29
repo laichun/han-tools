@@ -16,7 +16,7 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
  *
  * @Desciprtion: reids 配置 注意 mqtt 需要 bean 名称是： redisTemplate
  */
-@Configuration
+/*@Configuration
 @Order(-1)
 public class RedisConfig {
     //    为了在service中调用redis的操作类, 提前通过@Bean的方式准备好
@@ -50,4 +50,4 @@ public class RedisConfig {
         template.afterPropertiesSet();
         return template;
     }
-}
+}*/

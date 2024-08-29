@@ -27,4 +27,14 @@ public class MqttServerTemplate implements IMqttServerTemplate {
     public void sendAll(String topic, MqttQoS qos, byte[] message) {
         mqttServerTempProcessor.sendAll(topic, qos, message);
     }
+
+    @Override
+    public void disConnect(String clientId) {
+        mqttServerTempProcessor.disConnect(clientId);
+    }
+
+    @Override
+    public boolean isOnline(String clientId) {
+        return mqttServerTempProcessor.isOnline(clientId);
+    }
 }

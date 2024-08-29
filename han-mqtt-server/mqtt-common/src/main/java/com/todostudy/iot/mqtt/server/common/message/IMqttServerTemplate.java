@@ -21,4 +21,12 @@ public interface IMqttServerTemplate {
     public ChannelFuture sendMsgRetain(String clientId, String topic, MqttQoS qos, byte[] message);
 
     public void sendAll(String topic, MqttQoS qos, byte[] message);
+
+    /**
+     * 服务器端，端口连接
+     * @param clientId
+     */
+    public void disConnect(String clientId);
+
+    public boolean isOnline(String clientId);
 }

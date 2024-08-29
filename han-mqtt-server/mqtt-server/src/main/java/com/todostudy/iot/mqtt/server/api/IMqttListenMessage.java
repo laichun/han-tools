@@ -10,4 +10,7 @@ public interface IMqttListenMessage {
      */
     public void onMessage( String clientId, String topic, MqttQoS qos, byte[] message);
 
+    public void disConnect(String clientId);
+
+    public boolean isOnline(String clientId);
 }

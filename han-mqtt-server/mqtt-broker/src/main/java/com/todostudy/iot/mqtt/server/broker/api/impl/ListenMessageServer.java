@@ -33,6 +33,17 @@ public class ListenMessageServer implements IMqttListenMessage, SmartInitializin
            // mqttServerTemplate.sendMsgRetain("laich","hanson/dddd/ts",MqttQoS.AT_MOST_ONCE,"{\"msg:\":\"hason-send-retain-msg-success\"}".getBytes());
         }
     }
+
+    @Override
+    public void disConnect(String clientId) {
+        mqttServerTemplate.disConnect(clientId);
+    }
+
+    @Override
+    public boolean isOnline(String clientId) {
+        return mqttServerTemplate.isOnline(clientId);
+    }
+
     @Override
     public void afterSingletonsInstantiated() {
         // 单利 bean 初始化完成之后从 ApplicationContext 中获取 bean

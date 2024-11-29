@@ -9,7 +9,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.todostudy.tools.fm.enums.OrderByEnum;
 import com.todostudy.tools.fm.param.ByUpdateKey;
 import com.todostudy.tools.fm.param.UpdateDto;
-import com.todostudy.tools.utils.StrTool;
+import com.todostudy.tools.utils.HanTool;
 import com.todostudy.tools.fm.enums.QueryEnum;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -35,23 +35,23 @@ public abstract class HanController<T extends HBaseEntity> {
         List<QueryDto> queryDtoList = dto.getQueryDtoList();
         queryDtoList.forEach(item -> {
             if (item.getCondition().equals(QueryEnum.eq.name())) {
-                queryWrapper.eq(StrTool.xX2x_x(item.getKey()), item.getValue());
+                queryWrapper.eq(HanTool.xX2x_x(item.getKey()), item.getValue());
             } else if (item.getCondition().equals(QueryEnum.like.name())) {
-                queryWrapper.like(StrTool.xX2x_x(item.getKey()), item.getValue());
+                queryWrapper.like(HanTool.xX2x_x(item.getKey()), item.getValue());
             } else if (item.getCondition().equals(QueryEnum.ge.name())) {
-                queryWrapper.ge(StrTool.xX2x_x(item.getKey()), item.getValue());
+                queryWrapper.ge(HanTool.xX2x_x(item.getKey()), item.getValue());
             } else if (item.getCondition().equals(QueryEnum.le.name())) {
-                queryWrapper.le(StrTool.xX2x_x(item.getKey()), item.getValue());
+                queryWrapper.le(HanTool.xX2x_x(item.getKey()), item.getValue());
             } else if (item.getCondition().equals(QueryEnum.in.name())) {
-                queryWrapper.in(StrTool.xX2x_x(item.getKey()), (Collection) item.getValue());// "value": [1,2,3]
+                queryWrapper.in(HanTool.xX2x_x(item.getKey()), (Collection) item.getValue());// "value": [1,2,3]
             }
         });
 
         if (dto.getOrder() != null) {
             if (dto.getOrder().getBy().equals(OrderByEnum.ASC.name())) {
-                queryWrapper.orderByAsc(StrTool.xX2x_x(dto.getOrder().getOrder()));
+                queryWrapper.orderByAsc(HanTool.xX2x_x(dto.getOrder().getOrder()));
             } else if (dto.getOrder().getBy().equals(OrderByEnum.DESC.name())) {
-                queryWrapper.orderByDesc(StrTool.xX2x_x(dto.getOrder().getOrder()));
+                queryWrapper.orderByDesc(HanTool.xX2x_x(dto.getOrder().getOrder()));
             }
         }
         return ResponseEntity.ok(getService().list(queryWrapper));
@@ -69,23 +69,23 @@ public abstract class HanController<T extends HBaseEntity> {
         List<QueryDto> queryDtoList = dto.getQueryDtoList();
         queryDtoList.forEach(item -> {
             if (item.getCondition().equals(QueryEnum.eq.name())) {
-                queryWrapper.eq(StrTool.xX2x_x(item.getKey()), item.getValue());
+                queryWrapper.eq(HanTool.xX2x_x(item.getKey()), item.getValue());
             } else if (item.getCondition().equals(QueryEnum.like.name())) {
-                queryWrapper.like(StrTool.xX2x_x(item.getKey()), item.getValue());
+                queryWrapper.like(HanTool.xX2x_x(item.getKey()), item.getValue());
             } else if (item.getCondition().equals(QueryEnum.ge.name())) {
-                queryWrapper.ge(StrTool.xX2x_x(item.getKey()), item.getValue());
+                queryWrapper.ge(HanTool.xX2x_x(item.getKey()), item.getValue());
             } else if (item.getCondition().equals(QueryEnum.le.name())) {
-                queryWrapper.le(StrTool.xX2x_x(item.getKey()), item.getValue());
+                queryWrapper.le(HanTool.xX2x_x(item.getKey()), item.getValue());
             } else if (item.getCondition().equals(QueryEnum.in.name())) {
-                queryWrapper.in(StrTool.xX2x_x(item.getKey()), (Collection) item.getValue());// "value": [1,2,3]
+                queryWrapper.in(HanTool.xX2x_x(item.getKey()), (Collection) item.getValue());// "value": [1,2,3]
             }
 
         });
         if (dto.getOrder() != null) {
             if (dto.getOrder().getBy().equals(OrderByEnum.ASC.name())) {
-                queryWrapper.orderByAsc(StrTool.xX2x_x(dto.getOrder().getOrder()));
+                queryWrapper.orderByAsc(HanTool.xX2x_x(dto.getOrder().getOrder()));
             } else if (dto.getOrder().getBy().equals(OrderByEnum.DESC.name())) {
-                queryWrapper.orderByDesc(StrTool.xX2x_x(dto.getOrder().getOrder()));
+                queryWrapper.orderByDesc(HanTool.xX2x_x(dto.getOrder().getOrder()));
             }
         }
         IPage iPage = getService().page(page, queryWrapper);
@@ -117,11 +117,11 @@ public abstract class HanController<T extends HBaseEntity> {
         UpdateWrapper<ByUpdateKey> updateWrapper = new UpdateWrapper<ByUpdateKey>();
         updateWrapper.eq("id", param.getId());
         for (UpdateDto eqItem : param.getEqDtos()) {
-            updateWrapper.eq(StrTool.xX2x_x(eqItem.getKey()), eqItem.getValue());
+            updateWrapper.eq(HanTool.xX2x_x(eqItem.getKey()), eqItem.getValue());
         }
 
         for (UpdateDto setItem : param.getSetDtos()) {
-            updateWrapper.set(StrTool.xX2x_x(setItem.getKey()), setItem.getValue());
+            updateWrapper.set(HanTool.xX2x_x(setItem.getKey()), setItem.getValue());
         }
         //更新
         return ResponseEntity.ok(getService().update(updateWrapper));

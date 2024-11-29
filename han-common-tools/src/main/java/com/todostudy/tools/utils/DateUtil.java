@@ -10,7 +10,7 @@ import java.util.*;
 public class DateUtil extends DateUtils {
 
     private static final SimpleDateFormat YYYY_MM_DD = new SimpleDateFormat(PC.DATA_FORM_1);
-
+    private static final SimpleDateFormat YYYY_2 = new SimpleDateFormat(PC.YYYY_MM_DD_HH_MM_SS);
     public static long getData() {
         return System.currentTimeMillis();// 这个方式最快 new Date().getTime() 也可以。
     }
@@ -18,6 +18,10 @@ public class DateUtil extends DateUtils {
     public static String tostr_Day(Long timestamp) {
         final Date date = new Date(timestamp);
         return YYYY_MM_DD.format(date);
+    }
+    public static String toStr_Day_YYYY_MM_DD_HH_MM_SS(Long timestamp) {
+        final Date date = new Date(timestamp);
+        return YYYY_2.format(date);
     }
 
     /**
@@ -50,7 +54,7 @@ public class DateUtil extends DateUtils {
         if (!((timestamp + "").length() >= 12)) {
             throw new RuntimeException("时间格式有误");
         }
-        return ((timestamp / 1000 / 60) + min) * 60 * 1000;
+        return ((timestamp / PC.t1000 / PC.t60) + min) * PC.t60 * PC.t1000;
     }
 
     public static Long addMinApi(Long timestamp, Integer min) {
@@ -111,7 +115,7 @@ public class DateUtil extends DateUtils {
         sysDate.setTime(one);
         Calendar failDate = new GregorianCalendar();
         failDate.setTime(two);
-        return (sysDate.getTimeInMillis() - failDate.getTimeInMillis()) / 1000;
+        return (sysDate.getTimeInMillis() - failDate.getTimeInMillis()) / PC.t1000;
     }
 
     /**
@@ -126,11 +130,11 @@ public class DateUtil extends DateUtils {
         sysDate.setTime(one);
         Calendar failDate = new GregorianCalendar();
         failDate.setTime(two);
-        return (sysDate.getTimeInMillis() - failDate.getTimeInMillis()) / (24 * 360 * 1000);
+        return (sysDate.getTimeInMillis() - failDate.getTimeInMillis()) / (24 * 360 * PC.t1000);
     }
 
     public static long subtractionDay(long one, long two) {
-        return (one - two) / (24 * 360 * 1000);
+        return (one - two) / (24 * 360 * PC.t1000);
     }
 
     public static String getStringByFormat(String format) {
@@ -149,7 +153,7 @@ public class DateUtil extends DateUtils {
      * @param minutes
      */
     public static Date addMinutes(Date date, int minutes) {
-        return addSeconds(date, minutes * 60);
+        return addSeconds(date, minutes * PC.t60);
     }
 
 
@@ -164,10 +168,10 @@ public class DateUtil extends DateUtils {
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeZone(TimeZone.getTimeZone(timeZone));
         calendar.setTimeInMillis(timeStamp);
-        calendar.set(Calendar.HOUR_OF_DAY, 0);
-        calendar.set(Calendar.SECOND, 0);
-        calendar.set(Calendar.MINUTE, 0);
-        calendar.set(Calendar.MILLISECOND, 0);
+        calendar.set(Calendar.HOUR_OF_DAY, PC.t0);
+        calendar.set(Calendar.SECOND, PC.t0);
+        calendar.set(Calendar.MINUTE, PC.t0);
+        calendar.set(Calendar.MILLISECOND, PC.t0);
         return calendar.getTimeInMillis();
     }
 

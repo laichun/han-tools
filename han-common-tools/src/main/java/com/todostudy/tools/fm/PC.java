@@ -10,8 +10,10 @@ public interface PC {
     int t3 = 3;
     int t4 = 4;
     int t5 = 5;
+    int t60 = 60;
     int t245 = 256;
     int t1024 = 1024;
+    int t1000 = 1000;
 
     String f_ = "-";
     String fix = "_";
@@ -26,6 +28,8 @@ public interface PC {
     String JSONB = "jsonb";
     String JSON = "JSON";
     String ORGAN_ID = "organizationId";
+    String PRO_ID = "proId";
+    String userId = "userId";
     String ORG_ID = "orgId";
     String TENANT_ID = "tenantId";
 
@@ -39,7 +43,7 @@ public interface PC {
     int OK_CODE = 200;
     int ERROR_CODE = -1;
 
-    String UTF8 = "utf-8";
+    String UTF8 = "UTF-8";
     String GBK = "gbk";
     String DATA_FORM_1 = "yyyy-MM-dd";
     String DATA_FORM_2 = "yyyyMMddHHmmss";
@@ -47,4 +51,7 @@ public interface PC {
 
     String PAGE_SIZE = "pageSize";
     String PAGE = "page";
+    String STATUS = "status";
+    String ERROR = "error";
+    String YYYY_MM_DD_HH_MM_SS = "yyyy-MM-dd HH:mm:ss";
 }

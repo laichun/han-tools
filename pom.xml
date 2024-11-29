@@ -7,14 +7,14 @@
     <groupId>com.todostudy</groupId>
     <artifactId>han-tools</artifactId>
 
-    <version>1.2.2.1</version>
+    <version>1.2.2.2</version>
     <packaging>pom</packaging>
     <name>han-tools</name>
     <url>https://github.com/laichun/han-tools</url>
     <description>han-tools 开发工具类</description>
 
     <properties>
-        <hanversion>1.2.2.1</hanversion>
+        <hanversion>1.2.2.2</hanversion>
         <spring-boot.version>2.6.6</spring-boot.version>
         <hutool.version>4.1.6</hutool.version>
         <swagger.version>3.0.0</swagger.version>
@@ -29,8 +29,6 @@
         <module>han-mqtt-server/mqtt-common</module>
         <module>han-mqtt-server/mqtt-server</module>
         <module>han-mqtt-server/han-mqtt-service-spring-stater</module>
-
-        <module>han-mqtt-server/mqtt-broker</module>
 
       <!--  <module>han-mqtt-server/mqtt-broker</module>
         <module>han-mqtt-server/mqtt-example</module>

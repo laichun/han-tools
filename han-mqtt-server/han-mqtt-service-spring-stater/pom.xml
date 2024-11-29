@@ -6,7 +6,7 @@
     <parent>
         <artifactId>han-tools</artifactId>
         <groupId>com.todostudy</groupId>
-        <version>1.2.2.1</version>
+        <version>1.2.2.2</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
@@ -14,11 +14,15 @@
 
 
     <dependencies>
-
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
+            <scope>provided</scope>
+        </dependency>
         <dependency>
             <groupId>com.todostudy</groupId>
             <artifactId>mqtt-server</artifactId>
-            <version>1.2.2.1</version>
+            <version>1.2.2.2</version>
         </dependency>
 
         <dependency>
@@ -28,5 +32,18 @@
             <scope>provided</scope>
         </dependency>
     </dependencies>
+
+    <!--依赖管理-->
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>${spring-boot.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
 </project>
